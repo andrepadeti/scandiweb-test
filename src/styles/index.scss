@@ -1,0 +1,13 @@
+@import 'reset';
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Roboto&family=Roboto+Condensed:wght@700&display=swap');
+
+:root {
+  --c-primary: hsl(136, 53%, 59%);
+  --c-text: hsl(216, 8%, 12%);
+}
+
+html {
+  font-family: 'Raleway', sans-serif;
+  color: var(--c-text);
+}
