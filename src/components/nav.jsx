@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router'
 
 import logo from '../images/logo.svg'
 import shoppingCart from '../images/shopping-cart.svg'
 
 import NavCurrency from './nav-currency'
+import NavCategories from './nav-categories'
 
 const Navbar = styled.nav`
   display: flex;
@@ -50,21 +52,28 @@ const Session = styled.a`
   }
 `
 
-class Nav extends React.Component {
-
+class NavWithoutRouter extends React.Component {
   render() {
+    //get current pathname
+    const pathname = this.props.location.pathname.substring(1)
+
     return (
       <Navbar>
         <LeftSide>
-          <Session href="/">WOMEN</Session>
+          <NavCategories
+            categories={this.props.categories}
+            currentPath={pathname}
+          />
+
+          {/* <Session href="/">WOMEN</Session>
           <Session href="/">MEN</Session>
-          <Session href="/">KIDS</Session>
+          <Session href="/">KIDS</Session> */}
         </LeftSide>
         <Logo>
           <img src={logo} alt="our logo" />
         </Logo>
         <RightSide>
-          <NavCurrency/>
+          <NavCurrency />
           <div>
             <img src={shoppingCart} alt="" />
           </div>
@@ -74,4 +83,5 @@ class Nav extends React.Component {
   }
 }
 
+const Nav = withRouter(NavWithoutRouter)
 export default Nav

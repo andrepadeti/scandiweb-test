@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import parse from 'html-react-parser'
+// import parse from 'html-react-parser'
 import OutsideClickHandler from 'react-outside-click-handler'
-
+import { gql } from '@apollo/client'
+import { Query } from '@apollo/client/react/components'
 import Context from '../context/context'
 
 import chevronDown from '../images/chevron-down.svg'
@@ -45,16 +46,21 @@ const MenuItem = styled.div`
   }
 `
 
-class NavCurrency extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = { showDropDown: false }
-  //   this.handleShowDropDown = this.handleShowDropDown.bind(this)
-  //   this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
-  //   this.handleOutsideClick = this.handleOutsideClick.bind(this)
-  // }
+const CURRENCY_QUERY = gql`
+  query {
+    currencies
+  }
+`
 
-  state = { showDropDown: false }
+class NavCurrency extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { showDropDown: false }
+    this.handleShowDropDown = this.handleShowDropDown.bind(this)
+    this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
+    this.handleOutsideClick = this.handleOutsideClick.bind(this)
+  }
+
   static contextType = Context
 
   handleShowDropDown() {
@@ -67,43 +73,48 @@ class NavCurrency extends React.Component {
     }
   }
 
-  handleChangeCurrency(item) {
+  handleChangeCurrency(currency) {
     const { setCurrency } = this.context
-    setCurrency(item.currency)
+    setCurrency(currency)
     this.handleShowDropDown()
   }
 
   render() {
-    const currencies = [
-      { currency: 'USD', symbol: '&dollar;' },
-      { currency: 'EUR', symbol: '&euro;' },
-      { currency: 'JPY', symbol: '&#165;' },
-    ]
     const { currency } = this.context
-    const currencySymbol =
-      currencies[currencies.findIndex(e => e.currency === currency)].symbol
 
     return (
-      <Currency>
-        <Container onClick={this.handleShowDropDown}>
-          <p style={{ fontSize: '18px' }}>{parse(currencySymbol)}</p>
-          <img src={this.state.showDropDown ? chevronUp : chevronDown} alt="" />
-        </Container>
-        <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
-          {this.state.showDropDown && (
-            <CurrencyDropDownMenu>
-              {currencies.map((item, index) => (
-                <MenuItem
-                  key={index}
-                  onClick={() => this.handleChangeCurrency(item)}
-                >
-                  {parse(item.symbol)} {item.currency}
-                </MenuItem>
-              ))}
-            </CurrencyDropDownMenu>
-          )}
-        </OutsideClickHandler>
-      </Currency>
+      <Query query={CURRENCY_QUERY}>
+        {({ data, loading, error }) => {
+          if (loading) return <div>Loading...</div>
+          if (error) return <div>Error</div>
+          return (
+            <Currency>
+              <Container onClick={this.handleShowDropDown}>
+                <p style={{ fontSize: '18px' }}>{currency}</p>
+                <img
+                  src={this.state.showDropDown ? chevronUp : chevronDown}
+                  alt=""
+                />
+              </Container>
+              <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
+                {this.state.showDropDown && (
+                  <CurrencyDropDownMenu>
+                    {data.currencies.map((currency, index) => (
+                      <MenuItem
+                        key={index}
+                        onClick={() => this.handleChangeCurrency(currency)}
+                      >
+                        {/* {parse(item.symbol)} {item.currency} */}
+                        {currency}
+                      </MenuItem>
+                    ))}
+                  </CurrencyDropDownMenu>
+                )}
+              </OutsideClickHandler>
+            </Currency>
+          )
+        }}
+      </Query>
     )
   }
 }
