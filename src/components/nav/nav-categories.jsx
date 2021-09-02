@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { gql } from '@apollo/client'
-import { Query } from '@apollo/client/react/components'
 import { Link } from 'react-router-dom'
 
 const Session = styled(Link)`
@@ -10,12 +8,12 @@ const Session = styled(Link)`
   text-transform: uppercase;
 
   &:hover {
-    /* font-weight: bold; */
-    color: var(--c-primary);
-    border-bottom: 1px solid var(--c-primary);
+    font-weight: bold;
+    /* color: var(--c-primary); */
+    /* border-bottom: 1px solid var(--c-primary); */
   }
 
-  &:link:active {
+  &:active {
     color: var(--c-primary);
     border-bottom: 1px solid var(--c-primary);
   }
@@ -36,14 +34,15 @@ class NavCategories extends React.Component {
 
   render() {
     const currentPath = this.props.currentPath
+    // console.log(currentPath)
 
     return (
       <>
         {this.props.categories.map((category, index) => (
           <Session
             key={index}
-            to={`${category.name}`}
-            className={currentPath === category && 'active'}
+            to={`/${category.name}`}
+            className={currentPath === category.name && 'active-link'}
           >
             {category.name}
           </Session>

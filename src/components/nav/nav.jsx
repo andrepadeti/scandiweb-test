@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router'
 
-import logo from '../images/logo.svg'
-import shoppingCart from '../images/shopping-cart.svg'
+import logo from '../../images/logo.svg'
+import shoppingCart from '../../images/shopping-cart.svg'
 
 import NavCurrency from './nav-currency'
 import NavCategories from './nav-categories'
@@ -42,20 +42,14 @@ const RightSide = styled.div`
   gap: 2rem;
 `
 
-const Session = styled.a`
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    color: var(--c-primary);
-    border-bottom: 1px solid var(--c-primary);
-  }
-`
-
 class NavWithoutRouter extends React.Component {
   render() {
     //get current pathname
     const pathname = this.props.location.pathname.substring(1)
+    // const {match, location, history} = this.props
+    // console.log(match)
+    // console.log(location)
+    // console.log(history)
 
     return (
       <Navbar>
@@ -64,10 +58,6 @@ class NavWithoutRouter extends React.Component {
             categories={this.props.categories}
             currentPath={pathname}
           />
-
-          {/* <Session href="/">WOMEN</Session>
-          <Session href="/">MEN</Session>
-          <Session href="/">KIDS</Session> */}
         </LeftSide>
         <Logo>
           <img src={logo} alt="our logo" />

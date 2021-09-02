@@ -5,7 +5,7 @@ import { Query } from '@apollo/client/react/components'
 // import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 
-import GalleryItem from './gallery-item'
+import CategoryItem from './category-item'
 
 const Container = styled.section`
   padding-inline: 3rem;
@@ -36,7 +36,7 @@ const PRODUCTS_QUERY = gql`
   }
 `
 
-class GalleryWithoutRouter extends React.Component {
+class CategoryWithoutRouter extends React.Component {
   // static propTypes = {
   //   match: PropTypes.object.isRequired,
   //   location: PropTypes.object.isRequired,
@@ -44,8 +44,9 @@ class GalleryWithoutRouter extends React.Component {
   // }
 
   render() {
-    const { match } = this.props
-    const category = match.params.category
+    // const { match, location } = this.props
+    const category = this.props.location.pathname.substring(1)
+    // const category = match.params.category
 
     return (
       <Container>
@@ -58,7 +59,7 @@ class GalleryWithoutRouter extends React.Component {
             return (
               <Grid>
                 {data.category.products.map((product, index) => (
-                  <GalleryItem key={index} product={product} />
+                  <CategoryItem key={index} product={product} />
                 ))}
               </Grid>
             )
@@ -69,5 +70,5 @@ class GalleryWithoutRouter extends React.Component {
   }
 }
 
-const Gallery = withRouter(GalleryWithoutRouter)
-export default Gallery
+const Category = withRouter(CategoryWithoutRouter)
+export default Category

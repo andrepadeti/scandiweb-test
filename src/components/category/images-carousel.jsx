@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import ImageGallery from 'react-image-gallery'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,7 +14,7 @@ const Image = styled(ImageGallery)`
   position: relative;
 `
 
-const OutOfStockCover = styled.div`
+const OutOfStockOverlay = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -69,7 +69,9 @@ class ImagesCarousel extends React.Component {
           originalTitle="Test"
           // showIndex={true}
         />
-        {!this.props.inStock && <OutOfStockCover>out of stock</OutOfStockCover>}
+        {!this.props.inStock && (
+          <OutOfStockOverlay>out of stock</OutOfStockOverlay>
+        )}
         {this.props.selected && (
           <IconContainer>
             <Icon icon={faShoppingCart} />

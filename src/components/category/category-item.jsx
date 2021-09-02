@@ -2,12 +2,19 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
+import { withRouter } from 'react-router'
 
-import Context from '../context/context'
-import ImagesCarousel from './gallery-item-carousel'
+import Context from '../../context/context'
+import ImagesCarousel from './images-carousel'
 
 const Card = styled.div`
   padding: 1rem;
+
+  ${props =>
+    !props.inStock &&
+    css`
+      cursor: pointer;
+    `}
 
   ${props =>
     props.selected &&
@@ -40,13 +47,18 @@ const PRODUCT_QUERY = gql`
   }
 `
 
-class GalleryItem extends React.Component {
+class CategoryItemWithoutRouter extends React.Component {
   static contextType = Context
 
   priceInSelectedCurrency(prices) {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
     return `${currency} ${amount}`
+  }
+
+  handleClick(id) {
+    const { history, location } = this.props
+    history.push(`${location.pathname}/${id}`)
   }
 
   render() {
@@ -62,7 +74,10 @@ class GalleryItem extends React.Component {
           if (error) return <div>Error</div>
           // console.log(data)
           return (
-            <Card selected={this.props.selected}>
+            <Card
+              selected={this.props.selected}
+              onClick={() => data.product.inStock && this.handleClick(id)}
+            >
               <ImagesCarousel
                 selected={this.props.selected}
                 images={data.product.gallery}
@@ -80,4 +95,5 @@ class GalleryItem extends React.Component {
   }
 }
 
-export default GalleryItem
+const CategoryItem = withRouter(CategoryItemWithoutRouter)
+export default CategoryItem

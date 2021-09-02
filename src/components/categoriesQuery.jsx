@@ -1,5 +1,5 @@
 /* 
-try everything i could to move the query here instead of doing the query in the app component 
+tried everything i could to move the query here instead of doing the query in the app component 
 but couldn't make it work :-( 
 */
 

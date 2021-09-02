@@ -4,10 +4,10 @@ import styled from 'styled-components'
 import OutsideClickHandler from 'react-outside-click-handler'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
-import Context from '../context/context'
+import Context from '../../context/context'
 
-import chevronDown from '../images/chevron-down.svg'
-import chevronUp from '../images/chevron-up.svg'
+import chevronDown from '../../images/chevron-down.svg'
+import chevronUp from '../../images/chevron-up.svg'
 
 const Currency = styled.div`
   position: relative;
