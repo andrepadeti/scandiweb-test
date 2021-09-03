@@ -1,8 +1,9 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 // import { withRouter } from 'react-router'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
+
 
 // import CategoriesQuery from './components/categoriesQuery'
 import Category from './components/category/category'
@@ -34,6 +35,11 @@ class App extends React.Component {
           formattedData[index] = `/${category.name}/:product`
         })
         break
+      case 'home page':
+        data.categories.forEach((category, index) => {
+          formattedData[index] = `/${category.name}`
+        })
+        return formattedData[0]
       default:
     }
     return formattedData
@@ -49,6 +55,16 @@ class App extends React.Component {
             return (
               <Router>
                 <Nav categories={data.categories} />
+                <Route exact path="/">
+                  {/* redirects to the first category in the list */}
+                  <Redirect
+                    to={
+                      this.convertDataIntoRouteFormat(data, {
+                        component: 'home page',
+                      })
+                    }
+                  />
+                </Route>
                 <Route
                   exact
                   path={this.convertDataIntoRouteFormat(data, {

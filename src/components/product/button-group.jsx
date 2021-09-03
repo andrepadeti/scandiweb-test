@@ -22,19 +22,21 @@ class ButtonGroup extends React.Component {
   state = { clikedID: null }
 
   handleClick(id) {
-    this.setState({ clikedID: id })
+    this.setState({ clikedID: id.itemID })
+    this.props.setAttributes(id)
   }
 
   render() {
+    const { attributeID } = this.props
     return (
       <Container>
         {this.props.items.map((item, index) => (
           <Button
-            key={'b'+index}
-            onClick={() => this.handleClick(item.id)}
+            key={'b' + index}
+            onClick={() => this.handleClick({ attributeID, itemID: item.id })}
             active={this.state.clikedID === item.id}
           >
-            <ButtonValue key={'bv'+index}>{item.displayValue}</ButtonValue>
+            <ButtonValue key={'bv' + index}>{item.displayValue}</ButtonValue>
           </Button>
         ))}
       </Container>

@@ -16,10 +16,14 @@ class Attributes extends React.Component {
     return (
       <>
         {this.props.attributes.map((attribute, index) => (
-          <>
-            <Attribute key={'attr'+(index)}>{attribute.name}:</Attribute>
-            <ButtonGroup key={'bg'+index} items={attribute.items} />
-          </>
+          <React.Fragment key={'attr' + index}>
+            <Attribute>{attribute.name}:</Attribute>
+            <ButtonGroup
+              attributeID={attribute.id}
+              items={attribute.items}
+              setAttributes={this.props.setAttributes}
+            />
+          </React.Fragment>
         ))}
       </>
     )

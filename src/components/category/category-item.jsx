@@ -36,6 +36,7 @@ const ItemPrice = styled.p`
 const PRODUCT_QUERY = gql`
   query Product($id: String!) {
     product(id: $id) {
+      id
       name
       inStock
       gallery
