@@ -11,13 +11,13 @@ const Card = styled.div`
   padding: 1rem;
 
   ${props =>
-    !props.inStock &&
+    props.inStock &&
     css`
       cursor: pointer;
     `}
 
   ${props =>
-    props.selected &&
+    props.inCart &&
     css`
       box-shadow: 0px 0px 35px hsla(210, 5%, 67%, 0.6);
     `}
@@ -73,14 +73,18 @@ class CategoryItemWithoutRouter extends React.Component {
         {({ data, loading, error }) => {
           if (loading) return <div>Loading</div>
           if (error) return <div>Error</div>
-          // console.log(data)
           return (
             <Card
-              selected={this.props.selected}
-              onClick={() => data.product.inStock && this.handleClick(id)}
+              inStock={data.product.inStock}
+              inCart={this.props.inCart}
+              onClick={() =>
+                data.product.inStock &&
+                !this.props.inCart &&
+                this.handleClick(id)
+              }
             >
               <ImagesCarousel
-                selected={this.props.selected}
+                inCart={this.props.inCart}
                 images={data.product.gallery}
                 inStock={data.product.inStock}
               />

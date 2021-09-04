@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
-// import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 
+import Context from '../../context/context'
 import CategoryItem from './category-item'
 
 const Container = styled.section`
@@ -13,8 +13,6 @@ const Container = styled.section`
 `
 
 const Grid = styled.div`
-  --min-width: 22rem;
-
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(auto-fit, 395px);
@@ -37,11 +35,12 @@ const PRODUCTS_QUERY = gql`
 `
 
 class CategoryWithoutRouter extends React.Component {
-  // static propTypes = {
-  //   match: PropTypes.object.isRequired,
-  //   location: PropTypes.object.isRequired,
-  //   history: PropTypes.object.isRequired,
-  // }
+  static contextType = Context
+
+  isInCart = id => {
+    const { cart } = this.context
+    return cart.some(product => product.id === id)
+  }
 
   render() {
     // const { match, location } = this.props
@@ -53,13 +52,16 @@ class CategoryWithoutRouter extends React.Component {
         <Title>{category}</Title>
         <Query query={PRODUCTS_QUERY} variables={{ title: category }}>
           {({ data, loading, error }) => {
-            // console.log(data)
             if (loading) return <div>Loading</div>
             if (error) return <div>Error</div>
             return (
               <Grid>
                 {data.category.products.map((product, index) => (
-                  <CategoryItem key={index} product={product} />
+                  <CategoryItem
+                    key={index}
+                    product={product}
+                    inCart={this.isInCart(product.id)}
+                  />
                 ))}
               </Grid>
             )

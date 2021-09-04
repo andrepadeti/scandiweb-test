@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import parse from 'html-react-parser'
+import toast from 'react-hot-toast'
+import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
 import Attributes from './attributes'
@@ -65,7 +67,7 @@ const Description = styled.div`
   /* width: 40ch; */
 `
 
-class ProductDetails extends React.Component {
+class ProductDetailsWithoutRouter extends React.Component {
   static contextType = Context
   state = { mainPicture: 0, attributes: [] }
 
@@ -73,13 +75,24 @@ class ProductDetails extends React.Component {
     this.setState({ mainPicture: index })
   }
 
-  handleCTAClick = () => {
+  handleCTAClick = (history) => {
     const { cart, setCart } = this.context
-    
+
     const newProduct = {
-      id: this.props.data.product.id, 
-      attributes: this.state.attributes
+      id: this.props.data.product.id,
+      attributes: this.state.attributes,
     }
+
+    const newCart = cart
+    newCart.push(newProduct)
+
+    setCart(newCart)
+    toast.success('Added to cart', { duration: 3000, position: 'top-center' })
+    history.push('/')
+
+    setTimeout(() => {
+      console.log(cart)
+    }, 2000)
   }
 
   isAllAtributesChosen() {
@@ -125,7 +138,8 @@ class ProductDetails extends React.Component {
   }
 
   render() {
-    const { data } = this.props
+    const { data, history } = this.props
+    console.log(this.props)
     return (
       <Container>
         <ThumbnailsContainer>
@@ -151,7 +165,7 @@ class ProductDetails extends React.Component {
           <Price prices={data.product.prices} />
           <CTA
             active={this.isAllAtributesChosen()}
-            onClick={this.handleCTAClick}
+            onClick={() => this.handleCTAClick(history)}
           >
             add to cart
           </CTA>
@@ -162,4 +176,5 @@ class ProductDetails extends React.Component {
   }
 }
 
+const ProductDetails = withRouter(ProductDetailsWithoutRouter)
 export default ProductDetails

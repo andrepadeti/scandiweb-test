@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import ImageGallery from 'react-image-gallery'
+// import ImageGallery from 'react-image-gallery'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
@@ -8,10 +8,17 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 const Container = styled.div`
   position: relative;
   width: 100%;
-  height: 24rem;
+  height: 22rem;
 `
-const Image = styled(ImageGallery)`
+// const Image = styled(ImageGallery)`
+//   position: relative;
+// `
+
+const Image = styled.img`
   position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: scale-down;
 `
 
 const OutOfStockOverlay = styled.div`
@@ -27,6 +34,7 @@ const OutOfStockOverlay = styled.div`
   justify-content: center;
   text-transform: uppercase;
   font-size: 24px;
+  user-select: none;
   /* font-weight: bold; */
   color: hsl(231 6% 58%);
 `
@@ -58,7 +66,10 @@ class ImagesCarousel extends React.Component {
     })
     return (
       <Container>
-        <Image
+
+        <Image src={this.props.images[0]} alt='main' />
+
+        {/* <Image
           items={images}
           infinite={false}
           lazyLoad={true}
@@ -68,11 +79,11 @@ class ImagesCarousel extends React.Component {
           disableKeyDown={true}
           originalTitle="Test"
           // showIndex={true}
-        />
+        /> */}
         {!this.props.inStock && (
           <OutOfStockOverlay>out of stock</OutOfStockOverlay>
         )}
-        {this.props.selected && (
+        {this.props.inCart && (
           <IconContainer>
             <Icon icon={faShoppingCart} />
           </IconContainer>

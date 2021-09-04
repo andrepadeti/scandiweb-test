@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 // import { withRouter } from 'react-router'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
+import { Toaster } from 'react-hot-toast'
 
 // import CategoriesQuery from './components/categoriesQuery'
 import Category from './components/category/category'
@@ -50,6 +51,7 @@ class AppWithoutQuery extends React.Component {
     if (data.error) return <div>{data.error.toString()}</div>
     return (
       <GlobalContext>
+        <Toaster/>
         <Router>
           <Nav categories={data.categories} />
           <Route exact path="/">
