@@ -10,7 +10,8 @@ const H3 = styled.h3`
 `
 
 const Figure = styled.p`
-  margin-block: 2rem;
+  margin-block-start: 1rem;
+  margin-block-end: 2rem;
   font-size: 24px;
   font-weight: 700;
 `

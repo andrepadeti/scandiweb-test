@@ -1,40 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { gql } from '@apollo/client'
-import { Query } from '@apollo/client/react/components'
-import { withRouter } from 'react-router'
 import parse from 'html-react-parser'
 
 import Context from '../../context/context'
-
 import Attributes from './attributes'
 import Price from './price'
-
-const PRODUT_DETAILS_QUERY = gql`
-  query Product($id: String!) {
-    product(id: $id) {
-      id
-      name
-      brand
-      gallery
-      description
-      attributes {
-        id
-        name
-        type
-        items {
-          id
-          displayValue
-          value
-        }
-      }
-      prices {
-        currency
-        amount
-      }
-    }
-  }
-`
 
 const Container = styled.section`
   padding-inline: 3rem;
@@ -92,33 +62,31 @@ const Description = styled.div`
   margin-block-start: 2rem;
   font-family: 'Roboto', sans;
   font-weight: 400;
-  width: 40ch;
+  /* width: 40ch; */
 `
 
-class ProductDetailsWithoutRouter extends React.Component {
+class ProductDetails extends React.Component {
   static contextType = Context
-  state = { mainPicture: 0, attributes: [], productDetails: {} }
+  state = { mainPicture: 0, attributes: [] }
 
   handleThumbnailClick(index) {
     this.setState({ mainPicture: index })
   }
 
-  createAttributesList = attributes => {
-    let auxAttributesList = []
-    attributes.forEach(attribute =>
-      auxAttributesList.push({ attributeID: attribute.id, itemID: null })
-    )
-    this.setState({ attributes: auxAttributesList })
+  handleCTAClick = () => {
+    const { cart, setCart } = this.context
+    
+    const newProduct = {
+      id: this.props.data.product.id, 
+      attributes: this.state.attributes
+    }
   }
 
   isAllAtributesChosen() {
-    const someAtrributeNotChosen = this.state.attributes.some(current => {
-      console.log('some: ' + current.itemID)
-      return current.itemID === null
-    })
-    console.log(this.state.attributes)
-    console.log(someAtrributeNotChosen)
-    return !someAtrributeNotChosen
+    const someAtrributesNotChosen = this.state.attributes.some(
+      current => current.itemID === null
+    )
+    return !someAtrributesNotChosen
   }
 
   setAttributes = attributes => {
@@ -138,59 +106,60 @@ class ProductDetailsWithoutRouter extends React.Component {
     this.setState({ attributes: auxAttributes })
   }
 
-  render() {
-    const { match } = this.props
+  componentDidMount() {
     const {
-      params: { product: id },
-    } = match
+      data: {
+        product: { attributes },
+      },
+    } = this.props
 
+    const createAttributesList = attributes => {
+      let auxAttributesList = []
+      attributes.forEach(attribute =>
+        auxAttributesList.push({ attributeID: attribute.id, itemID: null })
+      )
+      this.setState({ attributes: auxAttributesList })
+    }
+
+    createAttributesList(attributes)
+  }
+
+  render() {
+    const { data } = this.props
     return (
-      <Query query={PRODUT_DETAILS_QUERY} variables={{ id }}>
-        {({ data, loading, error }) => {
-          if (loading) return <div>Loading</div>
-          if (error) return <div>Error</div>
-          // this.createAttributesList(data.product.attributes)
-          this.setState({attributes: true})
-          return (
-            <Container>
-              <ThumbnailsContainer>
-                {data.product.gallery.map((product, index) => (
-                  <ThumbanilsImg
-                    src={product}
-                    key={'tn' + index}
-                    alt="thumbnail"
-                    onClick={() => this.handleThumbnailClick(index)}
-                  />
-                ))}
-              </ThumbnailsContainer>
-              <MainPicture>
-                <img
-                  src={data.product.gallery[this.state.mainPicture]}
-                  alt="main"
-                />
-              </MainPicture>
-              <Details>
-                <Brand>{data.product.brand}</Brand>
-                <ProductName>{data.product.name}</ProductName>
-                <Attributes
-                  attributes={data.product.attributes}
-                  setAttributes={this.setAttributes}
-                />
-                <Price prices={data.product.prices} />
-                <CTA
-                  active={setTimeout(() => this.isAllAtributesChosen(), 2000)}
-                >
-                  add to cart
-                </CTA>
-                <Description>{parse(data.product.description)}</Description>
-              </Details>
-            </Container>
-          )
-        }}
-      </Query>
+      <Container>
+        <ThumbnailsContainer>
+          {data.product.gallery.map((product, index) => (
+            <ThumbanilsImg
+              src={product}
+              key={'tn' + index}
+              alt="thumbnail"
+              onClick={() => this.handleThumbnailClick(index)}
+            />
+          ))}
+        </ThumbnailsContainer>
+        <MainPicture>
+          <img src={data.product.gallery[this.state.mainPicture]} alt="main" />
+        </MainPicture>
+        <Details>
+          <Brand>{data.product.brand}</Brand>
+          <ProductName>{data.product.name}</ProductName>
+          <Attributes
+            attributes={data.product.attributes}
+            setAttributes={this.setAttributes}
+          />
+          <Price prices={data.product.prices} />
+          <CTA
+            active={this.isAllAtributesChosen()}
+            onClick={this.handleCTAClick}
+          >
+            add to cart
+          </CTA>
+          <Description>{parse(data.product.description)}</Description>
+        </Details>
+      </Container>
     )
   }
 }
 
-const ProductDetails = withRouter(ProductDetailsWithoutRouter)
 export default ProductDetails

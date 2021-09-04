@@ -2,13 +2,12 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 // import { withRouter } from 'react-router'
 import { gql } from '@apollo/client'
-import { Query } from '@apollo/client/react/components'
-
+import { graphql } from '@apollo/client/react/hoc'
 
 // import CategoriesQuery from './components/categoriesQuery'
 import Category from './components/category/category'
 import Nav from './components/nav/nav'
-import ProductDetails from './components/product/product-details'
+import Product from './components/product/product'
 
 import { GlobalContext } from './context/context'
 
@@ -20,7 +19,7 @@ const CATEGORIES_QUERY = gql`
   }
 `
 
-class App extends React.Component {
+class AppWithoutQuery extends React.Component {
   // manipulates data into the right format for <Route path>
   convertDataIntoRouteFormat(data, { component }) {
     let formattedData = []
@@ -46,47 +45,42 @@ class App extends React.Component {
   }
 
   render() {
+    const { data } = this.props
+    if (data.loading) return <div>Loading...</div>
+    if (data.error) return <div>{data.error.toString()}</div>
     return (
       <GlobalContext>
-        <Query query={CATEGORIES_QUERY}>
-          {({ data, loading, error }) => {
-            if (loading) return <div>Loading</div>
-            if (error) return <div>Error</div>
-            return (
-              <Router>
-                <Nav categories={data.categories} />
-                <Route exact path="/">
-                  {/* redirects to the first category in the list */}
-                  <Redirect
-                    to={
-                      this.convertDataIntoRouteFormat(data, {
-                        component: 'home page',
-                      })
-                    }
-                  />
-                </Route>
-                <Route
-                  exact
-                  path={this.convertDataIntoRouteFormat(data, {
-                    component: 'category',
-                  })}
-                >
-                  <Category />
-                </Route>
-                <Route
-                  path={this.convertDataIntoRouteFormat(data, {
-                    component: 'product',
-                  })}
-                >
-                  <ProductDetails />
-                </Route>
-              </Router>
-            )
-          }}
-        </Query>
+        <Router>
+          <Nav categories={data.categories} />
+          <Route exact path="/">
+            {/* redirects to the first category in the list */}
+            <Redirect
+              to={this.convertDataIntoRouteFormat(data, {
+                component: 'home page',
+              })}
+            />
+          </Route>
+          <Route
+            exact
+            path={this.convertDataIntoRouteFormat(data, {
+              component: 'category',
+            })}
+          >
+            <Category />
+          </Route>
+          <Route
+            path={this.convertDataIntoRouteFormat(data, {
+              component: 'product',
+            })}
+          >
+            <Product />
+          </Route>
+        </Router>
       </GlobalContext>
     )
   }
 }
 
+const withQuery = graphql(CATEGORIES_QUERY)
+const App = withQuery(AppWithoutQuery)
 export default App
