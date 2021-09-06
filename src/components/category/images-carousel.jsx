@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 // import ImageGallery from 'react-image-gallery'
 
@@ -66,8 +66,7 @@ class ImagesCarousel extends React.Component {
     })
     return (
       <Container>
-
-        <Image src={this.props.images[0]} alt='main' />
+        <Image src={this.props.images[0]} alt="main" />
 
         {/* <Image
           items={images}

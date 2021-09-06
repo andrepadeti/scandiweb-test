@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
@@ -45,9 +45,7 @@ class ProductWithoutRouter extends React.Component {
         {({ data, loading, error }) => {
           if (loading) return <div>Loading</div>
           if (error) return <div>Error</div>
-          return (
-            <ProductDetails data={data} />
-          )
+          return <ProductDetails data={data} />
         }}
       </Query>
     )

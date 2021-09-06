@@ -1,9 +1,15 @@
-import React from 'react'
+import * as React from 'react'
 
 const Context = React.createContext()
 
 export class GlobalContext extends React.Component {
-  state = { currency: 'USD', categories: [], currentProduct: {}, cart: [] }
+  state = {
+    currency: 'USD',
+    categories: [],
+    currentProduct: {},
+    cart: [],
+    showMiniCart: false,
+  }
 
   setCurrency = currency => {
     this.setState({ currency })
@@ -21,9 +27,13 @@ export class GlobalContext extends React.Component {
     this.setState({ cart })
   }
 
+  setShowMiniCart = value => {
+    this.setState({ showMiniCart: value })
+  }
+
   render() {
-    const { currency, categories, currentProduct, cart } = this.state
-    const { setCurrency, setCategories, setCurrentProduct, setCart } = this
+    const { currency, categories, currentProduct, cart, showMiniCart } = this.state
+    const { setCurrency, setCategories, setCurrentProduct, setCart, setShowMiniCart } = this
     // console.log(setCurrency)
 
     return (
@@ -37,6 +47,8 @@ export class GlobalContext extends React.Component {
           setCurrentProduct,
           cart,
           setCart,
+          showMiniCart,
+          setShowMiniCart
         }}
       >
         {this.props.children}

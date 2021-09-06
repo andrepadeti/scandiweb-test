@@ -3,7 +3,7 @@ tried everything i could to move the query here instead of doing the query in th
 but couldn't make it work :-( 
 */
 
-import React from 'react'
+import * as React from 'react'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 

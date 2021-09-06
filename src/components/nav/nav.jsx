@@ -1,12 +1,12 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router'
 
 import logo from '../../images/logo.svg'
-import shoppingCart from '../../images/shopping-cart.svg'
 
 import NavCurrency from './nav-currency'
 import NavCategories from './nav-categories'
+import CartIcon from './cart-icon'
 
 const Navbar = styled.nav`
   display: flex;
@@ -64,9 +64,7 @@ class NavWithoutRouter extends React.Component {
         </Logo>
         <RightSide>
           <NavCurrency />
-          <div>
-            <img src={shoppingCart} alt="" />
-          </div>
+          <CartIcon />
         </RightSide>
       </Navbar>
     )

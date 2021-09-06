@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import styled from 'styled-components'
 import parse from 'html-react-parser'
 import toast from 'react-hot-toast'
@@ -75,12 +75,22 @@ class ProductDetailsWithoutRouter extends React.Component {
     this.setState({ mainPicture: index })
   }
 
-  handleCTAClick = (history) => {
+  handleCTAClick = history => {
     const { cart, setCart } = this.context
 
+    const {
+      data: {
+        product: { id, name, brand, gallery, prices, attributes },
+      },
+    } = this.props
     const newProduct = {
-      id: this.props.data.product.id,
-      attributes: this.state.attributes,
+      id,
+      name,
+      brand,
+      gallery,
+      prices,
+      attributes,
+      chosenAttributes: this.state.attributes,
     }
 
     const newCart = cart
@@ -89,10 +99,6 @@ class ProductDetailsWithoutRouter extends React.Component {
     setCart(newCart)
     toast.success('Added to cart', { duration: 3000, position: 'top-center' })
     history.push('/')
-
-    setTimeout(() => {
-      console.log(cart)
-    }, 2000)
   }
 
   isAllAtributesChosen() {
@@ -139,7 +145,6 @@ class ProductDetailsWithoutRouter extends React.Component {
 
   render() {
     const { data, history } = this.props
-    console.log(this.props)
     return (
       <Container>
         <ThumbnailsContainer>

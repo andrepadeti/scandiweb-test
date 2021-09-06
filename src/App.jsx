@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 // import { withRouter } from 'react-router'
 import { gql } from '@apollo/client'
@@ -6,6 +6,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Toaster } from 'react-hot-toast'
 
 // import CategoriesQuery from './components/categoriesQuery'
+import MiniCart from './components/mini-cart/mini-cart'
 import Category from './components/category/category'
 import Nav from './components/nav/nav'
 import Product from './components/product/product'
@@ -51,9 +52,10 @@ class AppWithoutQuery extends React.Component {
     if (data.error) return <div>{data.error.toString()}</div>
     return (
       <GlobalContext>
-        <Toaster/>
+        <Toaster />
         <Router>
           <Nav categories={data.categories} />
+          <MiniCart />
           <Route exact path="/">
             {/* redirects to the first category in the list */}
             <Redirect
