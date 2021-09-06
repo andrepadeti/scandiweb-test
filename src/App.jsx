@@ -6,6 +6,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Toaster } from 'react-hot-toast'
 
 // import CategoriesQuery from './components/categoriesQuery'
+import ErrorBoundary from './components/ErrorBoundary'
 import MiniCart from './components/mini-cart/mini-cart'
 import Category from './components/category/category'
 import Nav from './components/nav/nav'
@@ -51,36 +52,38 @@ class AppWithoutQuery extends React.Component {
     if (data.loading) return <div>Loading...</div>
     if (data.error) return <div>{data.error.toString()}</div>
     return (
-      <GlobalContext>
-        <Toaster />
-        <Router>
-          <Nav categories={data.categories} />
-          <MiniCart />
-          <Route exact path="/">
-            {/* redirects to the first category in the list */}
-            <Redirect
-              to={this.convertDataIntoRouteFormat(data, {
-                component: 'home page',
+      <ErrorBoundary>
+        <GlobalContext>
+          <Toaster />
+          <Router>
+            <Nav categories={data.categories} />
+            <MiniCart />
+            <Route exact path="/">
+              {/* redirects to the first category in the list */}
+              <Redirect
+                to={this.convertDataIntoRouteFormat(data, {
+                  component: 'home page',
+                })}
+              />
+            </Route>
+            <Route
+              exact
+              path={this.convertDataIntoRouteFormat(data, {
+                component: 'category',
               })}
-            />
-          </Route>
-          <Route
-            exact
-            path={this.convertDataIntoRouteFormat(data, {
-              component: 'category',
-            })}
-          >
-            <Category />
-          </Route>
-          <Route
-            path={this.convertDataIntoRouteFormat(data, {
-              component: 'product',
-            })}
-          >
-            <Product />
-          </Route>
-        </Router>
-      </GlobalContext>
+            >
+              <Category />
+            </Route>
+            <Route
+              path={this.convertDataIntoRouteFormat(data, {
+                component: 'product',
+              })}
+            >
+              <Product />
+            </Route>
+          </Router>
+        </GlobalContext>
+      </ErrorBoundary>
     )
   }
 }

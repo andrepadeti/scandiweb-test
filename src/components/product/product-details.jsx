@@ -91,6 +91,7 @@ class ProductDetailsWithoutRouter extends React.Component {
       prices,
       attributes,
       chosenAttributes: this.state.attributes,
+      quantity: 1,
     }
 
     const newCart = cart

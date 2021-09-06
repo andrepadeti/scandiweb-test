@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Context from '../../context/context'
 
 import Attributes from './attributes'
+import Quantity from './quantity'
 
 const Container = styled.div`
   display: flex;
@@ -32,30 +33,8 @@ const Price = styled.p`
   font-weight: 500;
 `
 
-const Quantity = styled.div`
-  flex: 1 1 10%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const Figure = styled.div``
-
 const PictureContainer = styled.div`
   flex: 1 1 40%;
-  display: grid;
-  place-content: center;
-`
-
-const Box = styled.div`
-  font-family: 'Source Sans Pro', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  --size: 24px;
-  width: var(--size);
-  height: var(--size);
-  border: 1px solid black;
   display: grid;
   place-content: center;
 `
@@ -67,6 +46,21 @@ class CartItem extends React.Component {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
     return `${currency} ${amount}`
+  }
+
+  handleQuantityButtonClick = ({ action, productID }) => {
+    const { cart, setCart } = this.context
+    // spread operator is important here, otherwise i'd simply be
+    // passing a reference to the state and changing the state itself
+    let auxCart = [...cart]
+
+    // find the right product in the cart array
+    const index = auxCart.findIndex(product => product.id === productID)
+    // change quantity accordingly
+    if (action === 'increase') auxCart[index].quantity += 1
+    if (action === 'decrease') auxCart[index].quantity -= 1
+
+    setCart(auxCart)
   }
 
   render() {
@@ -84,12 +78,7 @@ class CartItem extends React.Component {
             chosenAttributes={product.chosenAttributes}
           />
         </Details>
-        {/* TODO: Quantity component */}
-        <Quantity>
-          <Box>+</Box>
-          <Figure>2</Figure>
-          <Box>-</Box>
-        </Quantity>
+        <Quantity product={product} />
         <PictureContainer>
           <img src={product.gallery[0]} alt="dummy" />
         </PictureContainer>
