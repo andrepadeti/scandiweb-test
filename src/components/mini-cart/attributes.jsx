@@ -17,7 +17,6 @@ const Box = styled.div`
   font-size: 14px;
   font-weight: 400;
   --size: 24px;
-  /* width: var(--size); */
   padding-inline: 0.3rem;
   height: var(--size);
   display: grid;
@@ -30,15 +29,23 @@ const Box = styled.div`
   ${props =>
     props.chosen &&
     css`
-      border: 1px solid black;
+      border: 'none';
       color: var(--c-text);
       background-color: var(--bg-light);
+    `}
+
+  ${props =>
+    props.swatch &&
+    css`
+      width: var(--size);
+      border: none;
+      outline: ${props.chosen && '2px solid var(--c-text)'};
+      background-color: ${props.value};
     `}
 `
 
 class Attributes extends React.Component {
   isChosen(attributeID, itemID, chosenAttributes) {
-    
     // find this particular attribute in the list of chosen attributes
     const index = chosenAttributes.findIndex(
       item => item.attributeID === attributeID
@@ -58,14 +65,23 @@ class Attributes extends React.Component {
       <Container>
         {attributes.map((attribute, index) => (
           <Attribute key={index}>
-            {attribute.items.map((item, index) => (
-              <Box
-                key={index}
-                chosen={this.isChosen(attribute.id, item.id, chosenAttributes)}
-              >
-                {item.displayValue}
-              </Box>
-            ))}
+            {attribute.items.map((item, index) => {
+              const swatch = attribute.type === 'swatch'
+              return (
+                <Box
+                  key={index}
+                  swatch={swatch}
+                  value={item.value}
+                  chosen={this.isChosen(
+                    attribute.id,
+                    item.id,
+                    chosenAttributes
+                  )}
+                >
+                  {!swatch && item.displayValue}
+                </Box>
+              )
+            })}
           </Attribute>
         ))}
       </Container>

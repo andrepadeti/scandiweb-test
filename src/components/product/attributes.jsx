@@ -20,6 +20,7 @@ class Attributes extends React.Component {
             <Attribute>{attribute.name}:</Attribute>
             <ButtonGroup
               attributeID={attribute.id}
+              attributeType={attribute.type}
               items={attribute.items}
               setAttributes={this.props.setAttributes}
             />

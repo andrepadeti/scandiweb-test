@@ -71,35 +71,45 @@ class ProductDetailsWithoutRouter extends React.Component {
   static contextType = Context
   state = { mainPicture: 0, attributes: [] }
 
+  componentDidMount() {
+    const {
+      data: {
+        product: { attributes },
+      },
+    } = this.props
+
+    const createAttributesList = attributes => {
+      let auxAttributesList = []
+      attributes.forEach(attribute =>
+        auxAttributesList.push({ attributeID: attribute.id, itemID: null })
+      )
+      this.setState({ attributes: auxAttributesList })
+    }
+
+    createAttributesList(attributes)
+  }
+
   handleThumbnailClick(index) {
     this.setState({ mainPicture: index })
   }
 
   handleCTAClick = history => {
     const { cart, setCart } = this.context
-
     const {
-      data: {
-        product: { id, name, brand, gallery, prices, attributes },
-      },
+      data: { product },
     } = this.props
+
     const newProduct = {
-      id,
-      name,
-      brand,
-      gallery,
-      prices,
-      attributes,
+      ...product,
       chosenAttributes: this.state.attributes,
       quantity: 1,
     }
-
-    const newCart = cart
+    const newCart = [...cart]
     newCart.push(newProduct)
 
     setCart(newCart)
     toast.success('Added to cart', { duration: 3000, position: 'top-center' })
-    history.push('/')
+    history.goBack()
   }
 
   isAllAtributesChosen() {
@@ -124,24 +134,6 @@ class ProductDetailsWithoutRouter extends React.Component {
     }
     // console.log(auxAttributes)
     this.setState({ attributes: auxAttributes })
-  }
-
-  componentDidMount() {
-    const {
-      data: {
-        product: { attributes },
-      },
-    } = this.props
-
-    const createAttributesList = attributes => {
-      let auxAttributesList = []
-      attributes.forEach(attribute =>
-        auxAttributesList.push({ attributeID: attribute.id, itemID: null })
-      )
-      this.setState({ attributes: auxAttributesList })
-    }
-
-    createAttributesList(attributes)
   }
 
   render() {

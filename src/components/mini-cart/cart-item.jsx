@@ -48,21 +48,6 @@ class CartItem extends React.Component {
     return `${currency} ${amount}`
   }
 
-  handleQuantityButtonClick = ({ action, productID }) => {
-    const { cart, setCart } = this.context
-    // spread operator is important here, otherwise i'd simply be
-    // passing a reference to the state and changing the state itself
-    let auxCart = [...cart]
-
-    // find the right product in the cart array
-    const index = auxCart.findIndex(product => product.id === productID)
-    // change quantity accordingly
-    if (action === 'increase') auxCart[index].quantity += 1
-    if (action === 'decrease') auxCart[index].quantity -= 1
-
-    setCart(auxCart)
-  }
-
   render() {
     const { product } = this.props
     return (
