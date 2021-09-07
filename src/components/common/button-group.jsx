@@ -32,7 +32,12 @@ const ButtonValue = styled.span`
 `
 
 class ButtonGroup extends React.Component {
-  state = { clikedID: null }
+  // state = { clikedID: null }
+
+  // componentDidMount() {
+  //   const { clikedID } = this.props
+  //   this.setState({ clikedID })
+  // }
 
   handleClick(id) {
     this.setState({ clikedID: id.itemID })
@@ -40,7 +45,7 @@ class ButtonGroup extends React.Component {
   }
 
   render() {
-    const { attributeID, items, attributeType } = this.props
+    const { attributeID, items, attributeType, clickedID } = this.props
     // check whether this attribute is a swatch attribute
     const swatch = attributeType === 'swatch'
     return (
@@ -51,7 +56,7 @@ class ButtonGroup extends React.Component {
             swatch={swatch}
             value={item.value}
             onClick={() => this.handleClick({ attributeID, itemID: item.id })}
-            active={this.state.clikedID === item.id}
+            active={clickedID === item.id}
           >
             <ButtonValue key={'bv' + index}>
               {!swatch && item.displayValue}

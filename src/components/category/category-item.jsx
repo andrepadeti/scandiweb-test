@@ -79,7 +79,6 @@ class CategoryItemWithoutRouter extends React.Component {
               inCart={this.props.inCart}
               onClick={() =>
                 data.product.inStock &&
-                !this.props.inCart &&
                 this.handleClick(id)
               }
             >

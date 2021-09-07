@@ -13,19 +13,35 @@ const Attribute = styled.h3`
 
 class Attributes extends React.Component {
   render() {
+    const { attributes, chosenAttributes } = this.props
     return (
       <>
-        {this.props.attributes.map((attribute, index) => (
-          <React.Fragment key={'attr' + index}>
-            <Attribute>{attribute.name}:</Attribute>
-            <ButtonGroup
-              attributeID={attribute.id}
-              attributeType={attribute.type}
-              items={attribute.items}
-              setAttributes={this.props.setAttributes}
-            />
-          </React.Fragment>
-        ))}
+        {attributes.map((attribute, index) => {
+          // find the right chosenAttribute to pass
+          const chosenAttributeIndex = chosenAttributes.findIndex(
+            item => item.attributeID === attribute.id
+          )
+          let clickedID
+          if (chosenAttributeIndex === -1) {
+            clickedID = null
+          } else {
+            clickedID = chosenAttributes[chosenAttributeIndex].itemID
+          }
+          console.log(clickedID)
+
+          return (
+            <React.Fragment key={'attr' + index}>
+              <Attribute>{attribute.name}:</Attribute>
+              <ButtonGroup
+                attributeID={attribute.id}
+                attributeType={attribute.type}
+                items={attribute.items}
+                clickedID={clickedID}
+                setAttributes={this.props.setAttributes}
+              />
+            </React.Fragment>
+          )
+        })}
       </>
     )
   }

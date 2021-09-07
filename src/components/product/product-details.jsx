@@ -69,7 +69,7 @@ const Description = styled.div`
 
 class ProductDetailsWithoutRouter extends React.Component {
   static contextType = Context
-  state = { mainPicture: 0, product: null }
+  state = { mainPicture: 0, product: null, inCart: false }
 
   componentDidMount() {
     const {
@@ -90,7 +90,7 @@ class ProductDetailsWithoutRouter extends React.Component {
       let newProduct = { ...product, chosenAttributes }
       this.setState({ product: newProduct })
     } else {
-      this.setState({ product: cart[index] })
+      this.setState({ product: cart[index], inCart: true })
     }
   }
 
@@ -103,8 +103,20 @@ class ProductDetailsWithoutRouter extends React.Component {
     const { cart, setCart } = this.context
     const newCart = [...cart]
 
-    newCart.push(this.state.product)
+    // check whether product is already in cart
+    const index = newCart.findIndex(
+      cartItem => cartItem.id === this.state.product.id
+    )
+
+    if (index === -1) {
+      //if not, push new product
+      newCart.push(this.state.product)
+    } else {
+      //if yes, replace product with new information
+      newCart[index] = this.state.product
+    }
     setCart(newCart)
+    console.log(newCart)
 
     toast.success('Added to cart', { duration: 3000, position: 'top-center' })
     history.goBack()
@@ -153,6 +165,7 @@ class ProductDetailsWithoutRouter extends React.Component {
           <ProductName>{product.name}</ProductName>
           <Attributes
             attributes={product.attributes}
+            chosenAttributes={product.chosenAttributes}
             setAttributes={this.setAttributes}
           />
           <Price prices={product.prices} />
@@ -160,7 +173,7 @@ class ProductDetailsWithoutRouter extends React.Component {
             active={this.isAllAtributesChosen()}
             onClick={this.handleCTAClick}
           >
-            add to cart
+            {this.state.inCart ? 'update cart' : 'add to cart'}
           </CTA>
           <Description>{parse(product.description)}</Description>
         </Details>
