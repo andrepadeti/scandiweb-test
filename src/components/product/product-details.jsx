@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
-import Attributes from './attributes'
+import Attributes from '../common/attributes'
 import Price from './price'
 
 const Container = styled.section`
@@ -69,79 +69,74 @@ const Description = styled.div`
 
 class ProductDetailsWithoutRouter extends React.Component {
   static contextType = Context
-  state = { mainPicture: 0, attributes: [] }
+  state = { mainPicture: 0, product: null }
 
   componentDidMount() {
     const {
-      data: {
-        product: { attributes },
-      },
+      data: { product },
     } = this.props
+    const { cart } = this.context
 
-    const createAttributesList = attributes => {
-      let auxAttributesList = []
-      attributes.forEach(attribute =>
-        auxAttributesList.push({ attributeID: attribute.id, itemID: null })
+    // check whether product is already in cart
+    const index = cart.findIndex(cartItem => cartItem.id === product.id)
+
+    // if not, create chosenAttributes property and set null to all choices
+    if (index === -1) {
+      let chosenAttributes = []
+      product.attributes.forEach(attribute =>
+        chosenAttributes.push({ attributeID: attribute.id, itemID: null })
       )
-      this.setState({ attributes: auxAttributesList })
+      // add chosenAttributes property to the product
+      let newProduct = { ...product, chosenAttributes }
+      this.setState({ product: newProduct })
+    } else {
+      this.setState({ product: cart[index] })
     }
-
-    createAttributesList(attributes)
   }
 
   handleThumbnailClick(index) {
     this.setState({ mainPicture: index })
   }
 
-  handleCTAClick = history => {
+  handleCTAClick = () => {
+    const { history } = this.props
     const { cart, setCart } = this.context
-    const {
-      data: { product },
-    } = this.props
-
-    const newProduct = {
-      ...product,
-      chosenAttributes: this.state.attributes,
-      quantity: 1,
-    }
     const newCart = [...cart]
-    newCart.push(newProduct)
 
+    newCart.push(this.state.product)
     setCart(newCart)
+
     toast.success('Added to cart', { duration: 3000, position: 'top-center' })
     history.goBack()
   }
 
   isAllAtributesChosen() {
-    const someAtrributesNotChosen = this.state.attributes.some(
+    const someAtrributesNotChosen = this.state.product.chosenAttributes.some(
       current => current.itemID === null
     )
     return !someAtrributesNotChosen
   }
 
   setAttributes = attributes => {
-    let auxAttributes = this.state.attributes
-    // check whether this attribute has been set before
-    const index = auxAttributes.findIndex(
+    let newProduct = this.state.product
+    // find this attribute in the attributes array
+    const index = newProduct.chosenAttributes.findIndex(
       current => current.attributeID === attributes.attributeID
     )
-    // if yes, replace old choice with new choice
-    if (index >= 0) {
-      auxAttributes[index] = attributes
-      // if not, append new choice to the array of choices
-    } else {
-      auxAttributes.push(attributes)
-    }
-    // console.log(auxAttributes)
-    this.setState({ attributes: auxAttributes })
+    // replace old choice with new choice
+    newProduct.chosenAttributes[index] = attributes
+    this.setState({ product: newProduct })
   }
 
   render() {
-    const { data, history } = this.props
+    const { product } = this.state
+
+    // wait until {product} is ready in componentDidMount
+    if (!product) return null
     return (
       <Container>
         <ThumbnailsContainer>
-          {data.product.gallery.map((product, index) => (
+          {product.gallery.map((product, index) => (
             <ThumbanilsImg
               src={product}
               key={'tn' + index}
@@ -151,23 +146,23 @@ class ProductDetailsWithoutRouter extends React.Component {
           ))}
         </ThumbnailsContainer>
         <MainPicture>
-          <img src={data.product.gallery[this.state.mainPicture]} alt="main" />
+          <img src={product.gallery[this.state.mainPicture]} alt="main" />
         </MainPicture>
         <Details>
-          <Brand>{data.product.brand}</Brand>
-          <ProductName>{data.product.name}</ProductName>
+          <Brand>{product.brand}</Brand>
+          <ProductName>{product.name}</ProductName>
           <Attributes
-            attributes={data.product.attributes}
+            attributes={product.attributes}
             setAttributes={this.setAttributes}
           />
-          <Price prices={data.product.prices} />
+          <Price prices={product.prices} />
           <CTA
             active={this.isAllAtributesChosen()}
-            onClick={() => this.handleCTAClick(history)}
+            onClick={this.handleCTAClick}
           >
             add to cart
           </CTA>
-          <Description>{parse(data.product.description)}</Description>
+          <Description>{parse(product.description)}</Description>
         </Details>
       </Container>
     )
