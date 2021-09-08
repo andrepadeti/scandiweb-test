@@ -46,18 +46,30 @@ const ProductName = styled.h2`
   font-weight: 400;
   margin-block-end: 1rem;
 `
-
-const CTA = styled.button`
+const ButtonsContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`
+const Button = styled.button`
   display: block;
   width: 12rem;
   padding-block: 1rem;
-  background-color: ${props =>
-    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
-  border: none;
 
+  background-color: var(--c-bg-light);
+  color: var(--c-text);
+  border: 1px solid var(--c-text);
   font-weight: 600;
   text-transform: uppercase;
+  cursor: pointer;
+`
+
+const CTA = styled(Button)`
+  background-color: ${props =>
+    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
   color: var(--c-text-light);
+  border: ${props =>
+    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
+  cursor: ${props => (props.active ? 'pointer' : 'default')};
 `
 
 const Description = styled.div`
@@ -86,8 +98,8 @@ class ProductDetailsWithoutRouter extends React.Component {
       product.attributes.forEach(attribute =>
         chosenAttributes.push({ attributeID: attribute.id, itemID: null })
       )
-      // add chosenAttributes property to the product
-      let newProduct = { ...product, chosenAttributes }
+      // add chosenAttributes and quantity properties to the product
+      let newProduct = { ...product, chosenAttributes, quantity: 1 }
       this.setState({ product: newProduct })
     } else {
       this.setState({ product: cart[index], inCart: true })
@@ -99,6 +111,11 @@ class ProductDetailsWithoutRouter extends React.Component {
   }
 
   handleCTAClick = () => {
+    if (!this.isAllAtributesChosen()) {
+      toast.error('Please, choose attributes first.')
+      return
+    }
+
     const { history } = this.props
     const { cart, setCart } = this.context
     const newCart = [...cart]
@@ -116,10 +133,29 @@ class ProductDetailsWithoutRouter extends React.Component {
       newCart[index] = this.state.product
     }
     setCart(newCart)
-    console.log(newCart)
 
     toast.success('Added to cart', { duration: 3000, position: 'top-center' })
     history.goBack()
+  }
+
+  handleRemoveButtonClick = () => {
+    console.log('here')
+    const { cart, setCart } = this.context
+    const newCart = [...cart]
+
+    // find product in the cart
+    const index = newCart.findIndex(
+      cartItem => cartItem.id === this.state.product.id
+    )
+
+    newCart.splice(index, 1)
+    setCart(newCart)
+    this.setState({ inCart: false })
+
+    toast.success('Product removed from cart', {
+      duration: 3000,
+      position: 'top-center',
+    })
   }
 
   isAllAtributesChosen() {
@@ -164,17 +200,24 @@ class ProductDetailsWithoutRouter extends React.Component {
           <Brand>{product.brand}</Brand>
           <ProductName>{product.name}</ProductName>
           <Attributes
-            attributes={product.attributes}
-            chosenAttributes={product.chosenAttributes}
+            theme="product-details"
+            product={product}
             setAttributes={this.setAttributes}
           />
           <Price prices={product.prices} />
-          <CTA
-            active={this.isAllAtributesChosen()}
-            onClick={this.handleCTAClick}
-          >
-            {this.state.inCart ? 'update cart' : 'add to cart'}
-          </CTA>
+          <ButtonsContainer>
+            <CTA
+              active={this.isAllAtributesChosen()}
+              onClick={this.handleCTAClick}
+            >
+              {this.state.inCart ? 'update cart' : 'add to cart'}
+            </CTA>
+            {this.state.inCart && (
+              <Button onClick={this.handleRemoveButtonClick}>
+                Remove from Cart
+              </Button>
+            )}
+          </ButtonsContainer>
           <Description>{parse(product.description)}</Description>
         </Details>
       </Container>

@@ -2,25 +2,24 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Context from '../../context/context'
 
-import Attributes from './attributes'
+import Attributes from '../common/attributes'
 import Quantity from './quantity'
 
 const Container = styled.div`
   display: flex;
   margin-block: 3rem;
-  gap: 1rem;
 `
 
 const Details = styled.div`
-  flex: 1 1 50%;
+  flex: 0 0 50%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 `
 
 const Title = styled.div`
   display: flex;
   flex-direction: column;
+  margin-block-end: 1.5rem;
 `
 
 const Name = styled.h3`
@@ -31,12 +30,17 @@ const Brand = styled(Name)``
 
 const Price = styled.p`
   font-weight: 500;
+  margin-block-end: 1.5rem;
 `
 
 const PictureContainer = styled.div`
-  flex: 1 1 40%;
+  flex: 0 0 40%;
   display: grid;
   place-content: center;
+`
+
+const Picture = styled.img`
+  object-fit: contain;
 `
 
 class CartItem extends React.Component {
@@ -49,7 +53,7 @@ class CartItem extends React.Component {
   }
 
   render() {
-    const { product } = this.props
+    const { product, setAttributes } = this.props
     return (
       <Container>
         <Details>
@@ -59,13 +63,14 @@ class CartItem extends React.Component {
           </Title>
           <Price>{this.priceInSelectedCurrency(product.prices)}</Price>
           <Attributes
-            attributes={product.attributes}
-            chosenAttributes={product.chosenAttributes}
+            theme="mini-cart"
+            product={product}
+            setAttributes={setAttributes}
           />
         </Details>
         <Quantity product={product} />
         <PictureContainer>
-          <img src={product.gallery[0]} alt="dummy" />
+          <Picture src={product.gallery[0]} alt="gallery" />
         </PictureContainer>
       </Container>
     )

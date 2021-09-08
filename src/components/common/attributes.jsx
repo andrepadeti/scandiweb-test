@@ -1,43 +1,61 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import ButtonGroup from './button-group'
 
 const Attribute = styled.h3`
-  margin-block-start: 2rem;
-  margin-block-end: 0.2rem;
   font-family: 'Roboto Condensed', sans-serif;
-  font-size: 18px;
   text-transform: uppercase;
+
+  ${props =>
+    props.theme === 'product-details' &&
+    css`
+      margin-block-start: 2rem;
+      margin-block-end: 0.2rem;
+      font-size: 18px;
+    `}
+
+  ${props =>
+    props.theme === 'mini-cart' &&
+    css`
+      font-size: 12px;
+    `}
+`
+
+const Gap = styled.div`
+  margin-block-start: ${props => props.value};
 `
 
 class Attributes extends React.Component {
   render() {
-    const { attributes, chosenAttributes } = this.props
+    const { product, setAttributes, theme } = this.props
     return (
       <>
-        {attributes.map((attribute, index) => {
+        {product.attributes.map((attribute, index) => {
           // find the right chosenAttribute to pass
-          const chosenAttributeIndex = chosenAttributes.findIndex(
+          const chosenAttributeIndex = product.chosenAttributes.findIndex(
             item => item.attributeID === attribute.id
           )
           let clickedID
           if (chosenAttributeIndex === -1) {
             clickedID = null
           } else {
-            clickedID = chosenAttributes[chosenAttributeIndex].itemID
+            clickedID = product.chosenAttributes[chosenAttributeIndex].itemID
           }
-          console.log(clickedID)
 
           return (
             <React.Fragment key={'attr' + index}>
-              <Attribute>{attribute.name}:</Attribute>
+              {theme === 'mini-cart' && <Gap value="0.4rem" />}
+              <Attribute theme={theme}>{attribute.name}:</Attribute>
+              {theme === 'mini-cart' && <Gap value="0.2rem" />}
               <ButtonGroup
+                theme={theme}
+                product={product}
                 attributeID={attribute.id}
                 attributeType={attribute.type}
                 items={attribute.items}
                 clickedID={clickedID}
-                setAttributes={this.props.setAttributes}
+                setAttributes={setAttributes}
               />
             </React.Fragment>
           )

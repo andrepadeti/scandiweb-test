@@ -59,7 +59,7 @@ class Attributes extends React.Component {
   }
 
   render() {
-    const { attributes, chosenAttributes } = this.props
+    const { attributes, chosenAttributes, setAttributes } = this.props
 
     return (
       <Container>

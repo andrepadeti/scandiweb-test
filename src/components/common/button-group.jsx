@@ -3,15 +3,29 @@ import styled, { css } from 'styled-components'
 
 const Container = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 `
 const Button = styled.button`
   // guarantee min size if button doesn't render any text
-  min-height: 2rem;
-  min-width: 2rem;
+  ${props =>
+    props.theme === 'product-details' &&
+    css`
+      min-height: 2rem;
+      min-width: 2rem;
+      padding-inline: 1rem;
+      padding-block: 0.5rem;
+    `}
 
-  padding-inline: 1rem;
-  padding-block: 0.5rem;
+  ${props =>
+    props.theme === 'mini-cart' &&
+    css`
+      --size: 24px;
+      background-color: red;
+      min-height: var(--size);
+      min-width: var(--size);
+    `}
+
 
   background-color: ${props =>
     props.swatch ? props.value : 'var(--c-bg-light)'};
@@ -32,30 +46,24 @@ const ButtonValue = styled.span`
 `
 
 class ButtonGroup extends React.Component {
-  // state = { clikedID: null }
-
-  // componentDidMount() {
-  //   const { clikedID } = this.props
-  //   this.setState({ clikedID })
-  // }
-
   handleClick(id) {
-    this.setState({ clikedID: id.itemID })
     this.props.setAttributes(id)
   }
 
   render() {
-    const { attributeID, items, attributeType, clickedID } = this.props
+    const { product, attributeID, items, attributeType, clickedID, theme } =
+      this.props
     // check whether this attribute is a swatch attribute
     const swatch = attributeType === 'swatch'
     return (
       <Container>
         {items.map((item, index) => (
           <Button
+            theme={theme}
             key={'b' + index}
             swatch={swatch}
             value={item.value}
-            onClick={() => this.handleClick({ attributeID, itemID: item.id })}
+            onClick={() => this.handleClick({ attributeID, itemID: item.id, productID: product.id })}
             active={clickedID === item.id}
           >
             <ButtonValue key={'bv' + index}>

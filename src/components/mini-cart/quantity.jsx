@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Context from '../../context/context'
 
 const QuantityContainer = styled.div`
-  flex: 1 1 10%;
+  flex: 0 0 10%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -46,6 +46,7 @@ class Quantity extends React.Component {
 
   render() {
     const { product } = this.props
+    // console.log(product)
     return (
       <QuantityContainer>
         <Box

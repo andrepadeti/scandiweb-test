@@ -17,9 +17,21 @@ const Overlay = styled.section`
 const Container = styled.div`
   position: absolute;
   right: 3rem;
-  width: 320px;
-  padding: 1rem;
+  inline-size: 380px;
+  padding: 1rem 1rem 1rem 1rem;
+  /* margin-inline-end: 1rem; */
   background-color: var(--c-bg-light);
+`
+
+const ScrollArea = styled.div`
+  max-block-size: 410px;
+
+  // these two apparentely contradictory properties are here to accomodate the scrollbar neatly
+  margin-inline-end: -1rem;
+  padding-inline-end: 1rem;
+
+  margin-block-end: 1rem;
+  overflow: auto;
 `
 
 const Title = styled.h2`
@@ -30,6 +42,23 @@ const Title = styled.h2`
 
 const NumberOfItems = styled.span`
   font-weight: 500;
+`
+
+const TotalContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const H3 = styled.h3`
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+`
+
+const Total = styled.div`
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
 `
 
 const ButtonsContainer = styled.div`
@@ -58,43 +87,104 @@ const ButtonLight = styled(Button)`
 class MiniCart extends React.Component {
   static contextType = Context
 
-  handleOutsideClick = (showMiniCart, setShowMiniCart) => {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown, false)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown, false)
+  }
+
+  handleKeyDown = event => {
+    const { setShowMiniCart } = this.context
+    if (event.keyCode === 27) {
+      setShowMiniCart(false)
+    }
+  }
+
+  handleOutsideClick = () => {
+    const { showMiniCart, setShowMiniCart } = this.context
     if (showMiniCart) {
       setShowMiniCart(false)
     }
   }
 
-  render() {
-    const { showMiniCart, setShowMiniCart, cart } = this.context
+  setAttributes = attributes => {
+    const { cart, setCart } = this.context
+    const newCart = [...cart]
 
+    // find the right place in the cart
+    const cartIndex = newCart.findIndex(
+      product => product.id === attributes.productID
+    )
+    const chosenAttributeIndex = newCart[cartIndex].chosenAttributes.findIndex(
+      attr => attr.attributeID === attributes.attributeID
+    )
+
+    // change value
+    newCart[cartIndex].chosenAttributes[chosenAttributeIndex].itemID =
+      attributes.itemID
+    setCart(newCart)
+  }
+
+  numberOfItemsToString = cart => {
+    return `${cart.length} item${cart.length > 1 ? 's' : ''}`
+  }
+
+  totalToString = () => {
+    const { cart, currency } = this.context
+    let total = 0
+
+    cart.forEach(product => {
+      // find price in the right currency
+      const unitaryPrice = product.prices.find(price => price.currency === currency)
+      const price = unitaryPrice.amount * product.quantity
+      total += price
+    })
+
+    return `${currency} ${total.toFixed(2)}`
+  }
+
+  render() {
+    const { showMiniCart, cart } = this.context
+
+    if (!showMiniCart) return null
     return (
       <>
-        {showMiniCart && (
-          <Overlay>
-            <OutsideClickHandler
-              onOutsideClick={() =>
-                // had to setTimeout because this click event clashes with click event in CartIcon component
-                setTimeout(
-                  () => this.handleOutsideClick(showMiniCart, setShowMiniCart),
-                  100
-                )
-              }
-            >
-              <Container>
+        <Overlay>
+          <OutsideClickHandler
+            onOutsideClick={() =>
+              // had to setTimeout because this click event clashes with click event in CartIcon component
+              setTimeout(this.handleOutsideClick, 100)
+            }
+          >
+            <Container>
+              <ScrollArea>
                 <Title>
-                  My bag, <NumberOfItems>2 items</NumberOfItems>{' '}
+                  My bag,{' '}
+                  <NumberOfItems>
+                    {this.numberOfItemsToString(cart)}
+                  </NumberOfItems>{' '}
                 </Title>
-                {cart.map((product, index)=>(
-                  <CartItem key={index} product={product} />
+                {cart.map((product, index) => (
+                  <CartItem
+                    key={index}
+                    product={product}
+                    setAttributes={this.setAttributes}
+                  />
                 ))}
-                <ButtonsContainer>
-                  <ButtonLight>View Bag</ButtonLight>
-                  <Button>Check Out</Button>
-                </ButtonsContainer>
-              </Container>
-            </OutsideClickHandler>
-          </Overlay>
-        )}
+                <TotalContainer>
+                  <H3>Total</H3>
+                  <Total>{this.totalToString()}</Total>
+                </TotalContainer>
+              </ScrollArea>
+              <ButtonsContainer>
+                <ButtonLight>View Bag</ButtonLight>
+                <Button>Check Out</Button>
+              </ButtonsContainer>
+            </Container>
+          </OutsideClickHandler>
+        </Overlay>
       </>
     )
   }
