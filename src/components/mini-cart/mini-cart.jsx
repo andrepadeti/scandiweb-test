@@ -1,10 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router'
 import OutsideClickHandler from 'react-outside-click-handler'
 
 import Context from '../../context/context'
 
-import CartItem from './cart-item'
+import CartItem from './mini-cart-item'
+import Total from '../common/total'
 
 const Overlay = styled.section`
   position: absolute;
@@ -26,7 +28,8 @@ const Container = styled.div`
 const ScrollArea = styled.div`
   max-block-size: 410px;
 
-  // these two apparentely contradictory properties are here to accomodate the scrollbar neatly
+  // these two apparentely contradictory properties are here
+  // to accomodate the scrollbar neatly
   margin-inline-end: -1rem;
   padding-inline-end: 1rem;
 
@@ -42,23 +45,6 @@ const Title = styled.h2`
 
 const NumberOfItems = styled.span`
   font-weight: 500;
-`
-
-const TotalContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-const H3 = styled.h3`
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-`
-
-const Total = styled.div`
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
 `
 
 const ButtonsContainer = styled.div`
@@ -84,7 +70,7 @@ const ButtonLight = styled(Button)`
   color: var(--c-text);
 `
 
-class MiniCart extends React.Component {
+class MiniCartWithoutRouter extends React.Component {
   static contextType = Context
 
   componentDidMount() {
@@ -109,6 +95,20 @@ class MiniCart extends React.Component {
     }
   }
 
+  handleViewBagButtonClick = () => {
+    const { history } = this.props
+    const { setShowMiniCart } = this.context
+    setShowMiniCart(false)
+    history.push('/cart')
+  }
+
+  handleCheckoutButtonClick = () => {
+    const { history } = this.props
+    const { setShowMiniCart } = this.context
+    setShowMiniCart(false)
+    history.push('/checkout')
+  }
+
   setAttributes = attributes => {
     const { cart, setCart } = this.context
     const newCart = [...cart]
@@ -128,21 +128,8 @@ class MiniCart extends React.Component {
   }
 
   numberOfItemsToString = cart => {
-    return `${cart.length} item${cart.length > 1 ? 's' : ''}`
-  }
-
-  totalToString = () => {
-    const { cart, currency } = this.context
-    let total = 0
-
-    cart.forEach(product => {
-      // find price in the right currency
-      const unitaryPrice = product.prices.find(price => price.currency === currency)
-      const price = unitaryPrice.amount * product.quantity
-      total += price
-    })
-
-    return `${currency} ${total.toFixed(2)}`
+    const isPlural = cart.length > 1 || cart.length === 0
+    return `${cart.length} item${isPlural ? 's' : ''}`
   }
 
   render() {
@@ -173,15 +160,18 @@ class MiniCart extends React.Component {
                     setAttributes={this.setAttributes}
                   />
                 ))}
-                <TotalContainer>
-                  <H3>Total</H3>
-                  <Total>{this.totalToString()}</Total>
-                </TotalContainer>
+                <Total />
               </ScrollArea>
-              <ButtonsContainer>
-                <ButtonLight>View Bag</ButtonLight>
-                <Button>Check Out</Button>
-              </ButtonsContainer>
+              {cart.length > 0 && (
+                <ButtonsContainer>
+                  <ButtonLight onClick={this.handleViewBagButtonClick}>
+                    View Bag
+                  </ButtonLight>
+                  <Button onClick={this.handleCheckoutButtonClick}>
+                    Check Out
+                  </Button>
+                </ButtonsContainer>
+              )}
             </Container>
           </OutsideClickHandler>
         </Overlay>
@@ -190,4 +180,5 @@ class MiniCart extends React.Component {
   }
 }
 
+const MiniCart = withRouter(MiniCartWithoutRouter)
 export default MiniCart

@@ -63,7 +63,13 @@ class ButtonGroup extends React.Component {
             key={'b' + index}
             swatch={swatch}
             value={item.value}
-            onClick={() => this.handleClick({ attributeID, itemID: item.id, productID: product.id })}
+            onClick={() =>
+              this.handleClick({
+                attributeID,
+                itemID: item.id,
+                productID: product.id,
+              })
+            }
             active={clickedID === item.id}
           >
             <ButtonValue key={'bv' + index}>

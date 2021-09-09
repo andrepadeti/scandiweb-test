@@ -7,6 +7,7 @@ import { withRouter } from 'react-router'
 import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Price from './price'
+import { Button, CTA } from '../common/buttons'
 
 const Container = styled.section`
   padding-inline: 3rem;
@@ -50,33 +51,11 @@ const ButtonsContainer = styled.div`
   display: flex;
   gap: 1rem;
 `
-const Button = styled.button`
-  display: block;
-  width: 12rem;
-  padding-block: 1rem;
-
-  background-color: var(--c-bg-light);
-  color: var(--c-text);
-  border: 1px solid var(--c-text);
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
-`
-
-const CTA = styled(Button)`
-  background-color: ${props =>
-    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
-  color: var(--c-text-light);
-  border: ${props =>
-    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
-  cursor: ${props => (props.active ? 'pointer' : 'default')};
-`
 
 const Description = styled.div`
   margin-block-start: 2rem;
   font-family: 'Roboto', sans;
   font-weight: 400;
-  /* width: 40ch; */
 `
 
 class ProductDetailsWithoutRouter extends React.Component {
@@ -134,7 +113,13 @@ class ProductDetailsWithoutRouter extends React.Component {
     }
     setCart(newCart)
 
-    toast.success('Added to cart', { duration: 3000, position: 'top-center' })
+    let toastMsg
+    if (this.state.inCart) {
+      toastMsg = 'Cart updated'
+    } else {
+      toastMsg = 'Added to cart'
+    }
+    toast.success(toastMsg, { duration: 3000, position: 'top-center' })
     history.goBack()
   }
 

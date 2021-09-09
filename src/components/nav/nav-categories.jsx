@@ -9,8 +9,6 @@ const Session = styled(Link)`
 
   &:hover {
     font-weight: bold;
-    /* color: var(--c-primary); */
-    /* border-bottom: 1px solid var(--c-primary); */
   }
 
   &:active {
@@ -20,13 +18,6 @@ const Session = styled(Link)`
 `
 
 class NavCategories extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.state = { selected: 0 }
-  //   this.handleCategoryClick = this.handleCategoryClick.bind(this)
-  // }
-
-  // static contextType = Context
 
   handleCategoryClick() {
     return null
@@ -34,7 +25,6 @@ class NavCategories extends React.Component {
 
   render() {
     const currentPath = this.props.currentPath
-    // console.log(currentPath)
 
     return (
       <>

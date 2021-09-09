@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Context from '../../context/context'
 
 import Attributes from '../common/attributes'
-import Quantity from './quantity'
+import Quantity from '../common/quantity'
 
 const Container = styled.div`
   display: flex;

@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-// import { withRouter } from 'react-router'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 import { Toaster } from 'react-hot-toast'
 
-// import CategoriesQuery from './components/categoriesQuery'
 import ErrorBoundary from './components/ErrorBoundary'
 import MiniCart from './components/mini-cart/mini-cart'
 import Category from './components/category/category'
 import Nav from './components/nav/nav'
 import Product from './components/product/product'
+import Cart from './components/cart/cart'
+import Checkout from './components/checkout/checkout'
 
 import { GlobalContext } from './context/context'
 
@@ -80,6 +80,12 @@ class AppWithoutQuery extends React.Component {
               })}
             >
               <Product />
+            </Route>
+            <Route exact path="/cart">
+              <Cart />
+            </Route>
+            <Route exact path="/checkout">
+              <Checkout />
             </Route>
           </Router>
         </GlobalContext>

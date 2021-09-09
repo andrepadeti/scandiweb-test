@@ -5,7 +5,7 @@ import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
-import ImagesCarousel from './images-carousel'
+import Image from './image'
 
 const Card = styled.div`
   padding: 1rem;
@@ -63,7 +63,6 @@ class CategoryItemWithoutRouter extends React.Component {
   }
 
   render() {
-    // proud of this deconstruction :-)
     const {
       product: { id },
     } = this.props
@@ -82,7 +81,7 @@ class CategoryItemWithoutRouter extends React.Component {
                 this.handleClick(id)
               }
             >
-              <ImagesCarousel
+              <Image
                 inCart={this.props.inCart}
                 images={data.product.gallery}
                 inStock={data.product.inStock}

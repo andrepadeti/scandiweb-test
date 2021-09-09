@@ -21,8 +21,6 @@ const LeftSide = styled.div`
   display: flex;
   align-items: stretch;
   gap: 2rem;
-
-  /* padding-block-end: 1rem; */
 `
 
 const Logo = styled.div`
@@ -30,7 +28,6 @@ const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   color: var(--c-primary);
 `
 
@@ -46,10 +43,6 @@ class NavWithoutRouter extends React.Component {
   render() {
     //get current pathname
     const pathname = this.props.location.pathname.substring(1)
-    // const {match, location, history} = this.props
-    // console.log(match)
-    // console.log(location)
-    // console.log(history)
 
     return (
       <Navbar>

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled from 'styled-components'
-// import ImageGallery from 'react-image-gallery'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
@@ -10,11 +9,7 @@ const Container = styled.div`
   width: 100%;
   height: 22rem;
 `
-// const Image = styled(ImageGallery)`
-//   position: relative;
-// `
-
-const Image = styled.img`
+const Img = styled.img`
   position: relative;
   width: 100%;
   height: 100%;
@@ -35,7 +30,6 @@ const OutOfStockOverlay = styled.div`
   text-transform: uppercase;
   font-size: 24px;
   user-select: none;
-  /* font-weight: bold; */
   color: hsl(231 6% 58%);
 `
 
@@ -53,32 +47,11 @@ const Icon = styled(FontAwesomeIcon)`
   color: var(--c-text-light);
 `
 
-class ImagesCarousel extends React.Component {
+class Image extends React.Component {
   render() {
-    let images = []
-    this.props.images.forEach((image, index) => {
-      images[index] = {
-        original: image,
-        // originalHeight: '100%',
-        // originalWidth: '100%',
-        originalClass: 'thumbnails',
-      }
-    })
     return (
       <Container>
-        <Image src={this.props.images[0]} alt="main" />
-
-        {/* <Image
-          items={images}
-          infinite={false}
-          lazyLoad={true}
-          showThumbnails={false}
-          showFullscreenButton={false}
-          showPlayButton={false}
-          disableKeyDown={true}
-          originalTitle="Test"
-          // showIndex={true}
-        /> */}
+        <Img src={this.props.images[0]} alt="main" />
         {!this.props.inStock && (
           <OutOfStockOverlay>out of stock</OutOfStockOverlay>
         )}
@@ -92,4 +65,4 @@ class ImagesCarousel extends React.Component {
   }
 }
 
-export default ImagesCarousel
+export default Image

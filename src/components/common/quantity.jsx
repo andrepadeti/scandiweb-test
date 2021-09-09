@@ -12,16 +12,21 @@ const QuantityContainer = styled.div`
 
 const Figure = styled.div``
 
-const Box = styled.div`
+const Box = styled.div.attrs(props => ({
+  size: props.big ? '2rem' : '24px',
+}))`
+  display: grid;
+  place-content: center;
+
+  width: ${props => props.size};
+  height: ${props => props.size};
+  border: 1px solid black;
+  cursor: pointer;
+  user-select: none;
+
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  --size: 24px;
-  width: var(--size);
-  height: var(--size);
-  border: 1px solid black;
-  display: grid;
-  place-content: center;
 `
 
 class Quantity extends React.Component {
@@ -50,6 +55,7 @@ class Quantity extends React.Component {
     return (
       <QuantityContainer>
         <Box
+          big={this.props.big}
           onClick={() =>
             this.handleQuantityButtonClick({
               action: 'increase',
@@ -61,6 +67,7 @@ class Quantity extends React.Component {
         </Box>
         <Figure>{product.quantity}</Figure>
         <Box
+          big={this.props.big}
           onClick={() =>
             this.handleQuantityButtonClick({
               action: 'decrease',
