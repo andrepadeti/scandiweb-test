@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Button = styled.button`
   display: block;
@@ -11,13 +11,29 @@ export const Button = styled.button`
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: var(--c-bg-light-hover);
+  }
 `
 
 export const CTA = styled(Button)`
-  background-color: ${props =>
-    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
-  border: ${props =>
-    props.active ? 'var(--c-primary)' : 'var(--c-primary-disabled)'};
+  background-color: var(--c-primary-disabled);
+  border: var(--c-primary-disabled);
   color: var(--c-text-light);
-  cursor: ${props => (props.active ? 'pointer' : 'default')};
+  cursor: default;
+
+  ${props =>
+    props.active &&
+    css`
+      background-color: var(--c-primary);
+      border: var(--c-primary);
+      color: var(--c-text-light);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--c-primary-hover);
+      }
+    `}
 `

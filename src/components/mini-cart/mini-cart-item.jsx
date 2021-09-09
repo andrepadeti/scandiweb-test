@@ -7,7 +7,7 @@ import Quantity from '../common/quantity'
 
 const Container = styled.div`
   display: flex;
-  margin-block: 3rem;
+  margin-block: 2rem;
 `
 
 const Details = styled.div`

@@ -6,10 +6,12 @@
 :root {
   --c-primary: hsl(136, 53%, 59%);
   --c-primary-disabled: hsl(137, 22%, 75%);
+  --c-primary-hover: hsl(136, 48%, 46%);
   --c-text: hsl(216, 8%, 12%);
   --c-bg-dark: hsl(216, 8%, 12%);
   --c-text-light: white;
   --c-bg-light: white;
+  --c-bg-light-hover: hsl(0, 0%, 85%);
 }
 
 html {

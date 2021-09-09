@@ -7,6 +7,7 @@ import Context from '../../context/context'
 
 import CartItem from './mini-cart-item'
 import Total from '../common/total'
+import { Button, CTA } from '../common/buttons'
 
 const Overlay = styled.section`
   position: absolute;
@@ -38,7 +39,7 @@ const ScrollArea = styled.div`
 `
 
 const Title = styled.h2`
-  margin-block-end: 2rem;
+  margin-block-end: 3rem;
   font-size: 1rem;
   font-weight: 700;
 `
@@ -52,22 +53,8 @@ const ButtonsContainer = styled.div`
   gap: 1rem;
 `
 
-const Button = styled.button`
-  flex: 1;
-  padding-block: 1rem;
-
-  background-color: var(--c-primary);
-  border: none;
-  color: var(--c-text-light);
-
-  font-weight: 600;
-  text-transform: uppercase;
-`
-
-const ButtonLight = styled(Button)`
-  background-color: var(--c-bg-light);
-  border: 1px solid var(--c-bg-dark);
-  color: var(--c-text);
+const Hr = styled.hr`
+  border-top: 1px solid hsla(0, 0%, 90%, 1);
 `
 
 class MiniCartWithoutRouter extends React.Component {
@@ -154,22 +141,24 @@ class MiniCartWithoutRouter extends React.Component {
                   </NumberOfItems>{' '}
                 </Title>
                 {cart.map((product, index) => (
+                  <React.Fragment key={index}>
                   <CartItem
-                    key={index}
                     product={product}
                     setAttributes={this.setAttributes}
                   />
+                  <Hr />
+                  </React.Fragment>
                 ))}
                 <Total />
               </ScrollArea>
               {cart.length > 0 && (
                 <ButtonsContainer>
-                  <ButtonLight onClick={this.handleViewBagButtonClick}>
+                  <Button onClick={this.handleViewBagButtonClick}>
                     View Bag
-                  </ButtonLight>
-                  <Button onClick={this.handleCheckoutButtonClick}>
-                    Check Out
                   </Button>
+                  <CTA active onClick={this.handleCheckoutButtonClick}>
+                    Check Out
+                  </CTA>
                 </ButtonsContainer>
               )}
             </Container>

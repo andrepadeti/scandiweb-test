@@ -1,14 +1,18 @@
+# Scandiweb
 
-Link to fonts:
-https://fonts.google.com/share?selection.family=Raleway:wght@300;400;500;600;700%7CRoboto%7CRoboto%20Condensed:wght@700
+### Entry React developer test
 
-Things I've learned:
-use React Context with class components
-use react-router-dom with class components => HOC instead of hooks
-new lib: html-react-parser to parse an html string
-new lib: react-outside-click-handler to handle outside component clicks
-new lib: react-image-gallery for image carousel
+Hi! Thanks for the opportunity to take part in the test. There are plenty of things I have learned so far, most noticeably the use of libraries such as [**react-router-dom**](https://reactrouter.com/web/guides/quick-start), [**apollo-client**](https://www.apollographql.com/docs/react/) and [**React Context**](https://reactjs.org/docs/context.html) within Class Components. 
 
-graphql and apollo client 
-https://www.howtographql.com/react-apollo/0-introduction/
+to run:
+```sh
+yarn
+yarn start
+```
+
+I am looking forward to knowing what you think about my app!
+
+André Padeti\
+andrepadeti@outlook.com\
+padeti.com.br/portfolio
 

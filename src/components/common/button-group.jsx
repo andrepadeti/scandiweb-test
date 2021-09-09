@@ -21,16 +21,23 @@ const Button = styled.button`
     props.theme === 'mini-cart' &&
     css`
       --size: 24px;
-      background-color: red;
       min-height: var(--size);
       min-width: var(--size);
     `}
-
-
+      
+      
+  cursor: pointer;
   background-color: ${props =>
     props.swatch ? props.value : 'var(--c-bg-light)'};
   color: hsla(0, 0%, 16%, 1);
   border: 1px solid #a6a6a6;
+  /* transition: 0.2s; */
+
+  &:hover {
+    outline: ${props => props.swatch && '2px solid #c4c1c1'};
+    /* background-color: ${props =>
+      props.swatch || 'var(--c-bg-light-hover'};  */
+  }
 
   ${props =>
     props.active &&

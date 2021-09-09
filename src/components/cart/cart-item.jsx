@@ -6,15 +6,25 @@ import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
 import ImagesCarousel from './images-carousel'
-import { Button } from '../common/buttons'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 
 const Container = styled.div`
   display: flex;
   margin-block: 3rem;
 `
 
+const RemoveItem = styled.div`
+  flex: 0 0 3%;
+  padding-block-start: 0.5rem;
+`
+const RemoveItemIcon = styled(FontAwesomeIcon)`
+  cursor: pointer;
+`
+
 const Details = styled.div`
-  flex: 0 0 60%;
+  flex: 0 0 57%;
   display: flex;
   flex-direction: column;
 `
@@ -82,6 +92,12 @@ class CartItem extends React.Component {
     const { product } = this.props
     return (
       <Container>
+        <RemoveItem>
+          <RemoveItemIcon
+            icon={faTrashAlt}
+            onClick={this.handleRemoveButtonClick}
+          />
+        </RemoveItem>
         <Details>
           <Brand>{product.brand}</Brand>
           <ProductName>{product.name}</ProductName>
@@ -91,13 +107,6 @@ class CartItem extends React.Component {
             product={product}
             setAttributes={this.setAttributes}
           />
-          <Button
-            small
-            style={{ marginTop: 'auto', marginLeft: 'auto' }}
-            onClick={this.handleRemoveButtonClick}
-          >
-            Remove from Cart
-          </Button>
         </Details>
         <Quantity big product={product} />
         <ImagesCarousel gallery={product.gallery} />
