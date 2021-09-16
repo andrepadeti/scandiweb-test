@@ -5,7 +5,8 @@ import toast from 'react-hot-toast'
 import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
-import ImagesCarousel from './images-carousel'
+import ImagesCarousel from './carousel/images-carousel'
+import currencySymbol from '../utils/currencies'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
@@ -69,7 +70,7 @@ class CartItem extends React.Component {
   priceInSelectedCurrency(prices) {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
-    return `${currency} ${amount}`
+    return `${currencySymbol(currency)} ${amount}`
   }
 
   handleRemoveButtonClick = () => {
@@ -90,6 +91,7 @@ class CartItem extends React.Component {
 
   render() {
     const { product } = this.props
+
     return (
       <Container>
         <RemoveItem>

@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Context from '../../context/context'
+import currencySymbol from '../utils/currencies'
 
 const TotalContainer = styled.div`
   display: flex;
@@ -37,7 +38,7 @@ class Total extends React.Component {
       total += price
     })
 
-    return `${currency} ${total.toFixed(2)}`
+    return `${currencySymbol(currency)} ${total.toFixed(2)}`
   }
 
   render() {

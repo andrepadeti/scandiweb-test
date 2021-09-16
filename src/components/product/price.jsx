@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Context from '../../context/context'
+import currencySymbol from '../utils/currencies'
 
 const H3 = styled.h3`
   margin-block-start: 2rem;
@@ -22,14 +23,16 @@ class Price extends React.Component {
   priceInSelectedCurrency(prices) {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
-    return `${currency} ${amount}`
+    return `${currencySymbol(currency)} ${amount}`
   }
 
   render() {
+    const { prices } = this.props
+
     return (
       <>
         <H3>Price</H3>
-        <Figure>{this.priceInSelectedCurrency(this.props.prices)}</Figure>
+        <Figure>{this.priceInSelectedCurrency(prices)}</Figure>
       </>
     )
   }

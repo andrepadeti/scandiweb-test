@@ -5,6 +5,7 @@ import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
 import Context from '../../context/context'
+import currencySymbol from '../utils/currencies'
 
 import chevronDown from '../../images/chevron-down.svg'
 import chevronUp from '../../images/chevron-up.svg'
@@ -26,7 +27,7 @@ const CurrencyDropDownMenu = styled.div`
   position: absolute;
   top: 150%;
   right: -50%;
-  width: 6rem;
+  width: 7rem;
   display: flex;
   flex-direction: column;
   padding-block: 0.5rem;
@@ -53,27 +54,22 @@ const CURRENCY_QUERY = gql`
 `
 
 class NavCurrencyWithoutQuery extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { showDropDown: false }
-    this.handleShowDropDown = this.handleShowDropDown.bind(this)
-    this.handleChangeCurrency = this.handleChangeCurrency.bind(this)
-    this.handleOutsideClick = this.handleOutsideClick.bind(this)
-  }
-
   static contextType = Context
+  state = { showDropDown: false }
 
-  handleShowDropDown() {
-    this.setState({ showDropDown: !this.state.showDropDown })
+  handleShowDropDown = () => {
+    const { showDropDown } = this.state
+    this.setState({ showDropDown: !showDropDown })
   }
 
-  handleOutsideClick() {
-    if (this.state.showDropDown) {
-      this.setState({ showDropDown: !this.state.showDropDown })
+  handleOutsideClick = () => {
+    const { showDropDown } = this.state
+    if (showDropDown) {
+      this.setState({ showDropDown: !showDropDown })
     }
   }
 
-  handleChangeCurrency(currency) {
+  handleChangeCurrency = currency => {
     const { setCurrency } = this.context
     setCurrency(currency)
     this.handleShowDropDown()
@@ -88,7 +84,7 @@ class NavCurrencyWithoutQuery extends React.Component {
     return (
       <Currency>
         <Container onClick={this.handleShowDropDown}>
-          <p style={{ fontSize: '18px' }}>{currency}</p>
+          <p style={{ fontSize: '18px' }}>{currencySymbol(currency)}</p>
           <img src={this.state.showDropDown ? chevronUp : chevronDown} alt="" />
         </Container>
         <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
@@ -99,7 +95,7 @@ class NavCurrencyWithoutQuery extends React.Component {
                   key={index}
                   onClick={() => this.handleChangeCurrency(currency)}
                 >
-                  {currency}
+                  {currencySymbol(currency) + ` ${currency}`}
                 </MenuItem>
               ))}
             </CurrencyDropDownMenu>

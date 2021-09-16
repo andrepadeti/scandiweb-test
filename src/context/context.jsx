@@ -32,8 +32,15 @@ export class GlobalContext extends React.Component {
   }
 
   render() {
-    const { currency, categories, currentProduct, cart, showMiniCart } = this.state
-    const { setCurrency, setCategories, setCurrentProduct, setCart, setShowMiniCart } = this
+    const { currency, categories, currentProduct, cart, showMiniCart } =
+      this.state
+    const {
+      setCurrency,
+      setCategories,
+      setCurrentProduct,
+      setCart,
+      setShowMiniCart,
+    } = this
     // console.log(setCurrency)
 
     return (
@@ -48,7 +55,7 @@ export class GlobalContext extends React.Component {
           cart,
           setCart,
           showMiniCart,
-          setShowMiniCart
+          setShowMiniCart,
         }}
       >
         {this.props.children}

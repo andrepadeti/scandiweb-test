@@ -5,16 +5,13 @@ import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
+import currencySymbol from '../utils/currencies'
+
 import Image from './image'
 
 const Card = styled.div`
   padding: 1rem;
-
-  ${props =>
-    props.inStock &&
-    css`
-      cursor: pointer;
-    `}
+  cursor: pointer;
 
   ${props =>
     props.inCart &&
@@ -23,8 +20,13 @@ const Card = styled.div`
     `}
 `
 const ItemName = styled.h2`
+  font-size: 18px;
+`
+
+const ItemBrand = styled.h2`
   margin-block-start: 2rem;
   font-size: 18px;
+  font-weight: 600;
 `
 
 const ItemPrice = styled.p`
@@ -38,6 +40,7 @@ const PRODUCT_QUERY = gql`
     product(id: $id) {
       id
       name
+      brand
       inStock
       gallery
       prices {
@@ -54,7 +57,7 @@ class CategoryItemWithoutRouter extends React.Component {
   priceInSelectedCurrency(prices) {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
-    return `${currency} ${amount}`
+    return `${currencySymbol(currency)} ${amount}`
   }
 
   handleClick(id) {
@@ -72,23 +75,22 @@ class CategoryItemWithoutRouter extends React.Component {
         {({ data, loading, error }) => {
           if (loading) return <div>Loading</div>
           if (error) return <div>Error</div>
+          const { product } = data
           return (
             <Card
-              inStock={data.product.inStock}
+              inStock={product.inStock}
               inCart={this.props.inCart}
-              onClick={() =>
-                data.product.inStock &&
-                this.handleClick(id)
-              }
+              onClick={() => this.handleClick(id)}
             >
               <Image
                 inCart={this.props.inCart}
-                images={data.product.gallery}
-                inStock={data.product.inStock}
+                images={product.gallery}
+                inStock={product.inStock}
               />
-              <ItemName>{data.product.name}</ItemName>
+              <ItemBrand>{product.brand}</ItemBrand>
+              <ItemName>{product.name}</ItemName>
               <ItemPrice>
-                {this.priceInSelectedCurrency(data.product.prices)}
+                {this.priceInSelectedCurrency(product.prices)}
               </ItemPrice>
             </Card>
           )

@@ -9,6 +9,7 @@ const Container = styled.div`
   width: 100%;
   height: 22rem;
 `
+
 const Img = styled.img`
   position: relative;
   width: 100%;
@@ -18,10 +19,7 @@ const Img = styled.img`
 
 const OutOfStockOverlay = styled.div`
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   background-color: hsl(0 0% 100% / 0.75);
 
   display: flex;

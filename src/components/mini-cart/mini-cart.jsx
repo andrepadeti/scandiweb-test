@@ -12,8 +12,8 @@ import { Button, CTA } from '../common/buttons'
 const Overlay = styled.section`
   position: absolute;
   z-index: 10;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: hsla(247, 13%, 25%, 0.22);
 `
 
@@ -115,8 +115,10 @@ class MiniCartWithoutRouter extends React.Component {
   }
 
   numberOfItemsToString = cart => {
-    const isPlural = cart.length > 1 || cart.length === 0
-    return `${cart.length} item${isPlural ? 's' : ''}`
+    let numberOfItems = 0
+    cart.forEach(item => (numberOfItems += item.quantity))
+    const isPlural = numberOfItems > 1 || numberOfItems === 0
+    return `${numberOfItems} item${isPlural ? 's' : ''}`
   }
 
   render() {
@@ -124,47 +126,45 @@ class MiniCartWithoutRouter extends React.Component {
 
     if (!showMiniCart) return null
     return (
-      <>
-        <Overlay>
-          <OutsideClickHandler
-            onOutsideClick={() =>
-              // had to setTimeout because this click event clashes with click event in CartIcon component
-              setTimeout(this.handleOutsideClick, 100)
-            }
-          >
-            <Container>
-              <ScrollArea>
-                <Title>
-                  My bag,{' '}
-                  <NumberOfItems>
-                    {this.numberOfItemsToString(cart)}
-                  </NumberOfItems>{' '}
-                </Title>
-                {cart.map((product, index) => (
-                  <React.Fragment key={index}>
+      <Overlay>
+        <OutsideClickHandler
+          onOutsideClick={() =>
+            // had to setTimeout because this click event clashes with click event in CartIcon component
+            setTimeout(this.handleOutsideClick, 100)
+          }
+        >
+          <Container>
+            <ScrollArea>
+              <Title>
+                My bag,{' '}
+                <NumberOfItems>
+                  {this.numberOfItemsToString(cart)}
+                </NumberOfItems>{' '}
+              </Title>
+              {cart.map((product, index) => (
+                <React.Fragment key={index}>
                   <CartItem
                     product={product}
                     setAttributes={this.setAttributes}
                   />
                   <Hr />
-                  </React.Fragment>
-                ))}
-                <Total />
-              </ScrollArea>
-              {cart.length > 0 && (
-                <ButtonsContainer>
-                  <Button onClick={this.handleViewBagButtonClick}>
-                    View Bag
-                  </Button>
-                  <CTA active onClick={this.handleCheckoutButtonClick}>
-                    Check Out
-                  </CTA>
-                </ButtonsContainer>
-              )}
-            </Container>
-          </OutsideClickHandler>
-        </Overlay>
-      </>
+                </React.Fragment>
+              ))}
+              <Total />
+            </ScrollArea>
+            {cart.length > 0 && (
+              <ButtonsContainer>
+                <Button onClick={this.handleViewBagButtonClick}>
+                  View Bag
+                </Button>
+                <CTA active onClick={this.handleCheckoutButtonClick}>
+                  Check Out
+                </CTA>
+              </ButtonsContainer>
+            )}
+          </Container>
+        </OutsideClickHandler>
+      </Overlay>
     )
   }
 }

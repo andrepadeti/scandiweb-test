@@ -4,6 +4,8 @@ import Context from '../../context/context'
 
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
+import currencySymbol from '../utils/currencies'
+
 
 const Container = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ class CartItem extends React.Component {
   priceInSelectedCurrency(prices) {
     const { currency } = this.context
     const { amount } = prices.find(price => price.currency === currency)
-    return `${currency} ${amount}`
+    return `${currencySymbol(currency)} ${amount}`
   }
 
   render() {

@@ -1,0 +1,8 @@
+[
+  { "cc": "AUD", "symbol": "AU$", "name": "Australian dollar" },
+  { "cc": "USD", "symbol": "$", "name": "American dollar" },
+  { "cc": "EUR", "symbol": "\u20ac", "name": "European Euro" },
+  { "cc": "GBP", "symbol": "\u00a3", "name": "British pound" },
+  { "cc": "JPY", "symbol": "\u00a5", "name": "Japanese yen" },
+  { "cc": "RUB", "symbol": "\u20bd", "name": "Russian ruble" }
+]

@@ -13,6 +13,7 @@ const PRODUCT_DETAILS_QUERY = gql`
       brand
       gallery
       description
+      inStock
       attributes {
         id
         name

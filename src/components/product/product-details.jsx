@@ -90,12 +90,17 @@ class ProductDetailsWithoutRouter extends React.Component {
   }
 
   handleCTAClick = () => {
+    const { product } = this.state
+    if (!product.inStock) {
+      toast.error('This product is out of stock.')
+      return
+    }
+
     if (!this.isAllAtributesChosen()) {
       toast.error('Please, choose attributes first.')
       return
     }
 
-    const { history } = this.props
     const { cart, setCart } = this.context
     const newCart = [...cart]
 
@@ -120,11 +125,10 @@ class ProductDetailsWithoutRouter extends React.Component {
       toastMsg = 'Added to cart'
     }
     toast.success(toastMsg, { duration: 3000, position: 'top-center' })
-    history.goBack()
+    this.setState({ inCart: true })
   }
 
   handleRemoveButtonClick = () => {
-    console.log('here')
     const { cart, setCart } = this.context
     const newCart = [...cart]
 
@@ -143,11 +147,21 @@ class ProductDetailsWithoutRouter extends React.Component {
     })
   }
 
-  isAllAtributesChosen() {
-    const someAtrributesNotChosen = this.state.product.chosenAttributes.some(
+  isAllAtributesChosen = () => {
+    const { product } = this.state
+
+    const someAtrributesNotChosen = product.chosenAttributes.some(
       current => current.itemID === null
     )
     return !someAtrributesNotChosen
+  }
+
+  isCTAActive() {
+    const { product } = this.state
+
+    if (!product.inStock) return false
+    if (!this.isAllAtributesChosen()) return false
+    return true
   }
 
   setAttributes = attributes => {
@@ -162,7 +176,7 @@ class ProductDetailsWithoutRouter extends React.Component {
   }
 
   render() {
-    const { product } = this.state
+    const { product, mainPicture, inCart } = this.state
 
     // wait until {product} is ready in componentDidMount
     if (!product) return null
@@ -179,7 +193,7 @@ class ProductDetailsWithoutRouter extends React.Component {
           ))}
         </ThumbnailsContainer>
         <MainPicture>
-          <img src={product.gallery[this.state.mainPicture]} alt="main" />
+          <img src={product.gallery[mainPicture]} alt="main" />
         </MainPicture>
         <Details>
           <Brand>{product.brand}</Brand>
@@ -191,13 +205,14 @@ class ProductDetailsWithoutRouter extends React.Component {
           />
           <Price prices={product.prices} />
           <ButtonsContainer>
-            <CTA
-              active={this.isAllAtributesChosen()}
-              onClick={this.handleCTAClick}
-            >
-              {this.state.inCart ? 'update cart' : 'add to cart'}
+            <CTA active={this.isCTAActive()} onClick={this.handleCTAClick}>
+              {product.inStock
+                ? inCart
+                  ? 'update cart'
+                  : 'add to cart'
+                : 'out of stock'}
             </CTA>
-            {this.state.inCart && (
+            {inCart && (
               <Button onClick={this.handleRemoveButtonClick}>
                 Remove from Cart
               </Button>
