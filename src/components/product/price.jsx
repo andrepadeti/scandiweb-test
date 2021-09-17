@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import Context from '../../context/context'
-import currencySymbol from '../utils/currencies'
+import currencySymbol from '../../utils/currencies'
 
 const H3 = styled.h3`
   margin-block-start: 2rem;

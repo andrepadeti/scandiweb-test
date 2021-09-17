@@ -4,7 +4,7 @@ import Context from '../../context/context'
 
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
-import currencySymbol from '../utils/currencies'
+import currencySymbol from '../../utils/currencies'
 
 
 const Container = styled.div`

@@ -5,7 +5,7 @@ import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
 import Context from '../../context/context'
-import currencySymbol from '../utils/currencies'
+import currencySymbol from '../../utils/currencies'
 
 import chevronDown from '../../images/chevron-down.svg'
 import chevronUp from '../../images/chevron-up.svg'

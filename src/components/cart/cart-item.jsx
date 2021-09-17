@@ -1,12 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import toast from 'react-hot-toast'
 
 import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
 import ImagesCarousel from './carousel/images-carousel'
-import currencySymbol from '../utils/currencies'
+import currencySymbol from '../../utils/currencies'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
@@ -74,7 +73,7 @@ class CartItem extends React.Component {
   }
 
   handleRemoveButtonClick = () => {
-    const { cart, setCart } = this.context
+    const { cart, setCart, toast } = this.context
     const { product } = this.props
     const newCart = [...cart]
 
@@ -82,11 +81,8 @@ class CartItem extends React.Component {
     const cartIndex = newCart.findIndex(item => item.id === product.id)
 
     newCart.splice(cartIndex, 1)
-    toast.success('Removed from Cart', {
-      duration: 3000,
-      position: 'top-center',
-    })
     setCart(newCart)
+    toast({ message: 'Removed from Cart' })
   }
 
   render() {

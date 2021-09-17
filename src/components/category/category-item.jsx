@@ -5,7 +5,7 @@ import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
-import currencySymbol from '../utils/currencies'
+import currencySymbol from '../../utils/currencies'
 
 import Image from './image'
 

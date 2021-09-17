@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import parse from 'html-react-parser'
-import toast from 'react-hot-toast'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
@@ -91,13 +90,14 @@ class ProductDetailsWithoutRouter extends React.Component {
 
   handleCTAClick = () => {
     const { product } = this.state
+    const { toast } = this.context
     if (!product.inStock) {
-      toast.error('This product is out of stock.')
+      toast({ message: 'This product is out of stock.', type: 'error' })
       return
     }
 
     if (!this.isAllAtributesChosen()) {
-      toast.error('Please, choose attributes first.')
+      toast({ message: 'Please, choose attributes first.', type: 'error' })
       return
     }
 
@@ -124,12 +124,12 @@ class ProductDetailsWithoutRouter extends React.Component {
     } else {
       toastMsg = 'Added to cart'
     }
-    toast.success(toastMsg, { duration: 3000, position: 'top-center' })
+    toast({ message: toastMsg })
     this.setState({ inCart: true })
   }
 
   handleRemoveButtonClick = () => {
-    const { cart, setCart } = this.context
+    const { cart, setCart, toast } = this.context
     const newCart = [...cart]
 
     // find product in the cart
@@ -141,10 +141,7 @@ class ProductDetailsWithoutRouter extends React.Component {
     setCart(newCart)
     this.setState({ inCart: false })
 
-    toast.success('Product removed from cart', {
-      duration: 3000,
-      position: 'top-center',
-    })
+    toast({ message: 'Product removed from cart' })
   }
 
   isAllAtributesChosen = () => {

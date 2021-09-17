@@ -9,6 +9,7 @@ export class GlobalContext extends React.Component {
     currentProduct: {},
     cart: [],
     showMiniCart: false,
+    toasts: [],
   }
 
   setCurrency = currency => {
@@ -31,8 +32,21 @@ export class GlobalContext extends React.Component {
     this.setState({ showMiniCart: value })
   }
 
+  toast = toast => {
+    const { toasts } = this.state
+    let newToasts = toasts
+    newToasts.push(toast)
+    this.setState({ toasts: newToasts })
+    setTimeout(() => {
+      const { toasts } = this.state
+      let newToasts = toasts
+      newToasts.shift()
+      this.setState({ toasts: newToasts })
+    }, 2500)
+  }
+
   render() {
-    const { currency, categories, currentProduct, cart, showMiniCart } =
+    const { currency, categories, currentProduct, cart, showMiniCart, toasts } =
       this.state
     const {
       setCurrency,
@@ -40,8 +54,8 @@ export class GlobalContext extends React.Component {
       setCurrentProduct,
       setCart,
       setShowMiniCart,
+      toast,
     } = this
-    // console.log(setCurrency)
 
     return (
       <Context.Provider
@@ -56,6 +70,8 @@ export class GlobalContext extends React.Component {
           setCart,
           showMiniCart,
           setShowMiniCart,
+          toasts,
+          toast,
         }}
       >
         {this.props.children}
