@@ -19,8 +19,38 @@ const RemoveItem = styled.div`
   flex: 0 0 3%;
   padding-block-start: 0.5rem;
 `
+
+const IconContainer = styled.div`
+  position: relative;
+`
+
 const RemoveItemIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
+`
+
+const Tooltip = styled.span`
+  --bg: hsl(0 0% 0% / 0.1);
+
+  position: absolute;
+  visibility: hidden;
+  z-index: 1;
+  top: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 1rem;
+  inline-size: max-content;
+  text-align: center;
+  border-radius: 6px;
+
+  background-color: var(--bg);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+
+  // referring to other component
+  ${IconContainer}:hover & {
+    visibility: visible;
+  }
 `
 
 const Details = styled.div`
@@ -40,6 +70,7 @@ const ProductName = styled.h2`
   font-weight: 400;
   margin-block-end: 1rem;
 `
+
 const Price = styled.div`
   font-size: 24px;
   font-weight: 700;
@@ -91,10 +122,13 @@ class CartItem extends React.Component {
     return (
       <Container>
         <RemoveItem>
-          <RemoveItemIcon
-            icon={faTrashAlt}
-            onClick={this.handleRemoveButtonClick}
-          />
+          <IconContainer>
+            <RemoveItemIcon
+              icon={faTrashAlt}
+              onClick={this.handleRemoveButtonClick}
+            />
+            <Tooltip>remove from cart</Tooltip>
+          </IconContainer>
         </RemoveItem>
         <Details>
           <Brand>{product.brand}</Brand>

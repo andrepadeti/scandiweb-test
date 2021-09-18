@@ -22,6 +22,9 @@ const Container = styled.div`
     cursor: pointer;
   }
 `
+const P = styled.p`
+  font-size: 18px;
+`
 
 const CurrencyDropDownMenu = styled.div`
   position: absolute;
@@ -84,7 +87,7 @@ class NavCurrencyWithoutQuery extends React.Component {
     return (
       <Currency>
         <Container onClick={this.handleShowDropDown}>
-          <p style={{ fontSize: '18px' }}>{currencySymbol(currency)}</p>
+          <P>{currencySymbol(currency)}</P>
           <img src={this.state.showDropDown ? chevronUp : chevronDown} alt="" />
         </Container>
         <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>

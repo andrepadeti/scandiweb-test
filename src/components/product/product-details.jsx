@@ -80,7 +80,7 @@ class ProductDetailsWithoutRouter extends React.Component {
       let newProduct = { ...product, chosenAttributes, quantity: 1 }
       this.setState({ product: newProduct })
     } else {
-      this.setState({ product: cart[index], inCart: true })
+      this.setState({ product: cart[index] })
     }
   }
 
@@ -105,21 +105,19 @@ class ProductDetailsWithoutRouter extends React.Component {
     const newCart = [...cart]
 
     // check whether product is already in cart
-    const index = newCart.findIndex(
-      cartItem => cartItem.id === this.state.product.id
-    )
+    const index = newCart.findIndex(cartItem => cartItem.id === product.id)
 
     if (index === -1) {
       //if not, push new product
-      newCart.push(this.state.product)
+      newCart.push({ ...product, quantity: 1 })
     } else {
       //if yes, replace product with new information
-      newCart[index] = this.state.product
+      newCart[index] = product
     }
     setCart(newCart)
 
     let toastMsg
-    if (this.state.inCart) {
+    if (this.isInCart()) {
       toastMsg = 'Cart updated'
     } else {
       toastMsg = 'Added to cart'
@@ -172,9 +170,16 @@ class ProductDetailsWithoutRouter extends React.Component {
     this.setState({ product: newProduct })
   }
 
-  render() {
-    const { product, mainPicture, inCart } = this.state
+  // checks whether product is in cart
+  isInCart = () => {
+    const { cart } = this.context
+    const { product } = this.state
+    return cart.some(cartItem => cartItem.id === product.id)
+  }
 
+  render() {
+    const { product, mainPicture } = this.state
+    
     // wait until {product} is ready in componentDidMount
     if (!product) return null
     return (
@@ -204,12 +209,12 @@ class ProductDetailsWithoutRouter extends React.Component {
           <ButtonsContainer>
             <CTA active={this.isCTAActive()} onClick={this.handleCTAClick}>
               {product.inStock
-                ? inCart
+                ? this.isInCart()
                   ? 'update cart'
                   : 'add to cart'
                 : 'out of stock'}
             </CTA>
-            {inCart && (
+            {this.isInCart() && (
               <Button onClick={this.handleRemoveButtonClick}>
                 Remove from Cart
               </Button>

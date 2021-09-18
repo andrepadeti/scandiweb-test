@@ -6,12 +6,13 @@ import ClickContainer from './click-container'
 const Container = styled.div`
   flex: 0 0 30%;
   position: relative;
+  user-select: none;
 `
 
 const Picture = styled.img`
-  /* width: 100%; */
-  /* height: 350px; */
-  object-fit: cover;
+  width: 100%;
+  max-height: 350px;
+  object-fit: scale-down;
 `
 
 class ImagesCarousel extends React.Component {
@@ -43,29 +44,15 @@ class ImagesCarousel extends React.Component {
   render() {
     const { index } = this.state
     const { gallery } = this.props
-    console.log(gallery)
+    const multiplePictures = gallery.length > 1
 
-    // if (!picture) return null
     return (
       <Container>
         <Picture src={gallery[index]} />
-        <ClickContainer handleClick={this.handleClick} />
+        {multiplePictures && <ClickContainer handleClick={this.handleClick} />}
       </Container>
     )
   }
 }
 
 export default ImagesCarousel
-
-/* 
-<ImageGallery
-          items={galley}
-          infinite={false}
-          lazyLoad={true}
-          showThumbnails={false}
-          showFullscreenButton={false}
-          showPlayButton={false}
-          disableKeyDown={true}
-          originalTitle="Test"
-        />
-        */

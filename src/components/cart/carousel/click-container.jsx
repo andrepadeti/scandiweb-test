@@ -15,7 +15,7 @@ const Container = styled.div`
 `
 
 const SideArrows = styled.div`
-  flex: 0 0 30%;
+  flex-basis: 30%;
   display: grid;
   place-content: center;
   color: hsl(216 8% 12% / 0.5);
