@@ -24,21 +24,21 @@ const CATEGORIES_QUERY = gql`
 
 class AppWithoutQuery extends React.Component {
   // manipulates data into the right format for <Route path>
-  convertDataIntoRouteFormat(data, { component }) {
+  convertCategoriesIntoRouteFormat(categories, { component }) {
     let formattedData = []
     switch (component) {
       case 'category':
-        data.categories.forEach((category, index) => {
+        categories.forEach((category, index) => {
           formattedData[index] = `/${category.name}`
         })
         break
       case 'product':
-        data.categories.forEach((category, index) => {
+        categories.forEach((category, index) => {
           formattedData[index] = `/${category.name}/:product`
         })
         break
       case 'home page':
-        data.categories.forEach((category, index) => {
+        categories.forEach((category, index) => {
           formattedData[index] = `/${category.name}`
         })
         return formattedData[0]
@@ -51,31 +51,38 @@ class AppWithoutQuery extends React.Component {
     const { data } = this.props
     if (data.loading) return <div>Loading...</div>
     if (data.error) return <div>{data.error.toString()}</div>
+
+    // data comes with preventExtensions. This is one way to remove it:
+    let { categories } = data
+    categories = Object.assign([], categories)
+    // now I can add elements to it
+    categories.unshift({ name: 'all' })
+
     return (
       <ErrorBoundary>
         <GlobalContext>
           <Toaster />
           <Router>
-            <Nav categories={data.categories} />
+            <Nav categories={categories} />
             <MiniCart />
             <Route exact path="/">
               {/* redirects to the first category in the list */}
               <Redirect
-                to={this.convertDataIntoRouteFormat(data, {
+                to={this.convertCategoriesIntoRouteFormat(categories, {
                   component: 'home page',
                 })}
               />
             </Route>
             <Route
               exact
-              path={this.convertDataIntoRouteFormat(data, {
+              path={this.convertCategoriesIntoRouteFormat(categories, {
                 component: 'category',
               })}
             >
               <Category />
             </Route>
             <Route
-              path={this.convertDataIntoRouteFormat(data, {
+              path={this.convertCategoriesIntoRouteFormat(categories, {
                 component: 'product',
               })}
             >

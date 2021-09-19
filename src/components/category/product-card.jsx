@@ -51,7 +51,7 @@ const PRODUCT_QUERY = gql`
   }
 `
 
-class CategoryItemWithoutRouter extends React.Component {
+class ProductCardWithoutRouter extends React.Component {
   static contextType = Context
 
   priceInSelectedCurrency(prices) {
@@ -100,5 +100,5 @@ class CategoryItemWithoutRouter extends React.Component {
   }
 }
 
-const CategoryItem = withRouter(CategoryItemWithoutRouter)
-export default CategoryItem
+const ProductCard = withRouter(ProductCardWithoutRouter)
+export default ProductCard

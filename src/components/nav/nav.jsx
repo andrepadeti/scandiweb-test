@@ -49,7 +49,7 @@ class NavWithoutRouter extends React.Component {
         <LeftSide>
           <NavCategories
             categories={this.props.categories}
-            currentPath={pathname}
+            pathname={pathname}
           />
         </LeftSide>
         <Logo>

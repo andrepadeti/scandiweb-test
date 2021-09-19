@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-const Session = styled(Link)`
+const SessionLink = styled(Link)`
   display: flex;
   align-items: center;
   text-transform: uppercase;
@@ -18,24 +18,23 @@ const Session = styled(Link)`
 `
 
 class NavCategories extends React.Component {
-
   handleCategoryClick() {
     return null
   }
 
   render() {
-    const currentPath = this.props.currentPath
+    const { pathname, categories } = this.props
 
     return (
       <>
-        {this.props.categories.map((category, index) => (
-          <Session
+        {categories.map((category, index) => (
+          <SessionLink
             key={index}
             to={`/${category.name}`}
-            className={currentPath === category.name && 'active-link'}
+            className={pathname === category.name && 'active-link'}
           >
             {category.name}
-          </Session>
+          </SessionLink>
         ))}
       </>
     )

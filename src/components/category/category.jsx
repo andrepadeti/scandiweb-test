@@ -5,7 +5,7 @@ import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
-import CategoryItem from './category-item'
+import ProductCard from './product-card'
 
 const Container = styled.section`
   padding-inline: 3rem;
@@ -25,8 +25,19 @@ const Title = styled.h1`
 `
 
 const PRODUCTS_QUERY = gql`
-  query Products($title: String!) {
-    category(input: { title: $title }) {
+  query Products($category: String!) {
+    category(input: { title: $category }) {
+      products {
+        id
+      }
+    }
+  }
+`
+
+const ALL_PRODUCTS_QUERY = gql`
+  query All {
+    categories {
+      name
       products {
         id
       }
@@ -43,21 +54,40 @@ class CategoryWithoutRouter extends React.Component {
   }
 
   render() {
-    // const { match, location } = this.props
     const category = this.props.location.pathname.substring(1)
-    // const category = match.params.category
+    
+    let query
+    if (category === 'all') {
+      query = ALL_PRODUCTS_QUERY
+    } else {
+      query = PRODUCTS_QUERY
+    }
 
     return (
       <Container>
         <Title>{category}</Title>
-        <Query query={PRODUCTS_QUERY} variables={{ title: category }}>
+        <Query query={query} variables={{ category }}>
           {({ data, loading, error }) => {
             if (loading) return <div>Loading</div>
             if (error) return <div>Error</div>
+            
+            let products = []
+            if (category === 'all') {
+              // format data to make an array of products
+              data.categories.forEach(category =>
+                category.products.forEach(product =>
+                  products.push(product)
+                )
+              )
+            } else {
+              // data is already an array of products
+              products = data.category.products
+            }
+
             return (
               <Grid>
-                {data.category.products.map((product, index) => (
-                  <CategoryItem
+                {products.map((product, index) => (
+                  <ProductCard
                     key={index}
                     product={product}
                     inCart={this.isInCart(product.id)}

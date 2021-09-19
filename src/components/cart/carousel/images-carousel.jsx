@@ -35,7 +35,6 @@ class ImagesCarousel extends React.Component {
         }
         break
       default:
-        return
     }
 
     this.setState({ index: newIndex })
