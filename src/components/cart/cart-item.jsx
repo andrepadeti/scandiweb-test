@@ -6,6 +6,7 @@ import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
 import ImagesCarousel from './carousel/images-carousel'
 import currencySymbol from '../../utils/currencies'
+import Tooltip from '../common/tooltip'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
@@ -20,37 +21,14 @@ const RemoveItem = styled.div`
   padding-block-start: 0.5rem;
 `
 
-const IconContainer = styled.div`
-  position: relative;
-`
-
 const RemoveItemIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
 `
 
-const Tooltip = styled.span`
-  --bg: hsl(0 0% 0% / 0.1);
-
-  position: absolute;
-  visibility: hidden;
-  z-index: 1;
-  top: 130%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 5px 1rem;
-  inline-size: max-content;
-  text-align: center;
-  border-radius: 6px;
-
-  background-color: var(--bg);
+const TooltipStyled = styled(Tooltip)`
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 400;
-
-  // referring to other component
-  ${IconContainer}:hover & {
-    visibility: visible;
-  }
 `
 
 const Details = styled.div`
@@ -122,13 +100,12 @@ class CartItem extends React.Component {
     return (
       <Container>
         <RemoveItem>
-          <IconContainer>
+          <TooltipStyled text="remove from cart">
             <RemoveItemIcon
               icon={faTrashAlt}
               onClick={this.handleRemoveButtonClick}
             />
-            <Tooltip>remove from cart</Tooltip>
-          </IconContainer>
+          </TooltipStyled>
         </RemoveItem>
         <Details>
           <Brand>{product.brand}</Brand>

@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Context from '../../context/context'
 
+import Tooltip from '../common/tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 
@@ -33,39 +34,10 @@ const Box = styled.div.attrs(props => ({
   font-weight: 400;
 `
 
-const Tooltip = styled.span`
-  --bg: hsl(0 0% 0% / 0.1);
-  visibility: hidden;
-  position: absolute;
-  top: 130%;
-  left: 50%;
-  transform: translateX(-50%);
-  inline-size: max-content;
-  text-align: center;
-  padding: 5px 1rem;
-  border-radius: 6px;
-  z-index: 1;
-
-  background-color: var(--bg);
+const TooltipStyled = styled(Tooltip)`
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 400;
-
-  // referring to other component
-  ${Box}:hover & {
-    visibility: visible;
-  }
-
-  &::after {
-    content: ' ';
-    position: absolute;
-    bottom: 100%;
-    left: 50%; /* To the right of the tooltip */
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent var(--bg) transparent;
-  }
 `
 
 class Quantity extends React.Component {
@@ -94,12 +66,12 @@ class Quantity extends React.Component {
   }
 
   render() {
-    const { product } = this.props
+    const { product, big } = this.props
 
     return (
       <QuantityContainer>
         <Box
-          big={this.props.big}
+          big={big}
           withBorder={true}
           onClick={() =>
             this.handleQuantityButtonClick({
@@ -112,7 +84,7 @@ class Quantity extends React.Component {
         </Box>
         <Figure>{product.quantity}</Figure>
         <Box
-          big={this.props.big}
+          big={big}
           withBorder={product.quantity > 0}
           onClick={() =>
             this.handleQuantityButtonClick({
@@ -122,10 +94,9 @@ class Quantity extends React.Component {
           }
         >
           {product.quantity === 0 ? (
-            <>
+            <TooltipStyled text="remove from cart" arrow>
               <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-              <Tooltip>remove from cart</Tooltip>
-            </>
+            </TooltipStyled>
           ) : (
             '-'
           )}
