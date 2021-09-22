@@ -38,9 +38,35 @@ class ProductCardWithoutRouter extends React.Component {
     return `${currencySymbol(currency)} ${amount}`
   }
 
-  handleClick(id) {
-    const { history, location } = this.props
-    history.push(`${location.pathname}/${id}`)
+  handleClick(product) {
+    if (product.attributes.length === 0) {
+      // if product has no attributes, add to cart immediately
+      const { cart, setCart, toast } = this.context
+
+      // check whether product is already in the cart
+      const isSimilarProductInCart = cart.some(
+        cartItem => cartItem.id === product.id
+      )
+
+      if (isSimilarProductInCart) {
+        toast({ message: 'Product is already in the cart', type: 'error' })
+      } else {
+        // product object is not extensible
+        let newProduct = JSON.parse(JSON.stringify(product))
+        // chosenAttributes is empty since there are no attributes to choose from
+        newProduct.chosenAttributes = []
+        // add to cart
+        const newCart = [...cart]
+        newCart.push({ ...newProduct, quantity: 1 })
+        setCart(newCart)
+
+        toast({ message: 'Added too cart.' })
+      }
+    } else {
+      // send to PDP to choose attributes before adding to cart
+      const { history, location } = this.props
+      history.push(`${location.pathname}/${product.id}`)
+    }
   }
 
   render() {
@@ -65,7 +91,7 @@ class ProductCardWithoutRouter extends React.Component {
                 inCart={inCart}
                 images={product.gallery}
                 inStock={product.inStock}
-                handleClick={() => this.handleClick(id)}
+                handleClick={() => this.handleClick(product)}
               />
               <ItemBrand>{product.brand}</ItemBrand>
               <ItemName>{product.name}</ItemName>
