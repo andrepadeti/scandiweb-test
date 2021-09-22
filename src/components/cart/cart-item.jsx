@@ -114,7 +114,7 @@ class CartItem extends React.Component {
           <Attributes
             theme="product-details"
             product={product}
-            setAttributes={this.setAttributes}
+            // setAttributes={this.setAttributes}
           />
         </Details>
         <Quantity big product={product} />

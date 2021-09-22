@@ -6,7 +6,6 @@ import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
 import currencySymbol from '../../utils/currencies'
 
-
 const Container = styled.div`
   display: flex;
   margin-block: 2rem;
@@ -67,7 +66,7 @@ class CartItem extends React.Component {
           <Attributes
             theme="mini-cart"
             product={product}
-            setAttributes={setAttributes}
+            // setAttributes={setAttributes}
           />
         </Details>
         <Quantity product={product} />

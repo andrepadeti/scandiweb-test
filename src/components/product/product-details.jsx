@@ -6,7 +6,8 @@ import { withRouter } from 'react-router'
 import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Price from './price'
-import { Button, CTA } from '../common/buttons'
+import { CTA } from '../common/buttons'
+// import { Button } from '../common/buttons'
 
 const Container = styled.section`
   padding-inline: 3rem;
@@ -57,31 +58,35 @@ const Description = styled.div`
   font-weight: 400;
 `
 
+const Message = styled.p`
+  margin-block-end: 2rem;
+  font-size: 14px;
+`
+
 class ProductDetailsWithoutRouter extends React.Component {
   static contextType = Context
-  state = { mainPicture: 0, product: null, inCart: false }
+  state = {
+    mainPicture: 0,
+    product: null,
+  }
 
-  componentDidMount() {
+  initializeProduct() {
     const {
       data: { product },
     } = this.props
-    const { cart } = this.context
 
-    // check whether product is already in cart
-    const index = cart.findIndex(cartItem => cartItem.id === product.id)
+    // chosenAttributes will store user's choices
+    let chosenAttributes = []
+    product.attributes.forEach(attribute =>
+      chosenAttributes.push({ attributeID: attribute.id, itemID: null })
+    )
+    // add chosenAttributes to state.product
+    let newProduct = { ...product, chosenAttributes }
+    this.setState({ product: newProduct })
+  }
 
-    // if not, create chosenAttributes property and set null to all choices
-    if (index === -1) {
-      let chosenAttributes = []
-      product.attributes.forEach(attribute =>
-        chosenAttributes.push({ attributeID: attribute.id, itemID: null })
-      )
-      // add chosenAttributes and quantity properties to the product
-      let newProduct = { ...product, chosenAttributes, quantity: 1 }
-      this.setState({ product: newProduct })
-    } else {
-      this.setState({ product: cart[index] })
-    }
+  componentDidMount() {
+    this.initializeProduct()
   }
 
   handleThumbnailClick(index) {
@@ -101,29 +106,18 @@ class ProductDetailsWithoutRouter extends React.Component {
       return
     }
 
+    if (this.isInCart()) {
+      toast({ message: 'This product is already in the cart.', type: 'error' })
+      return
+    }
+
     const { cart, setCart } = this.context
     const newCart = [...cart]
-
-    // check whether product is already in cart
-    const index = newCart.findIndex(cartItem => cartItem.id === product.id)
-
-    if (index === -1) {
-      //if not, push new product
-      newCart.push({ ...product, quantity: 1 })
-    } else {
-      //if yes, replace product with new information
-      newCart[index] = product
-    }
+    newCart.push({ ...product, quantity: 1 })
     setCart(newCart)
 
-    let toastMsg
-    if (this.isInCart()) {
-      toastMsg = 'Cart updated'
-    } else {
-      toastMsg = 'Added to cart'
-    }
-    toast({ message: toastMsg })
-    this.setState({ inCart: true })
+    toast({ message: 'Added too cart.' })
+    this.initializeProduct()
   }
 
   handleRemoveButtonClick = () => {
@@ -137,7 +131,6 @@ class ProductDetailsWithoutRouter extends React.Component {
 
     newCart.splice(index, 1)
     setCart(newCart)
-    this.setState({ inCart: false })
 
     toast({ message: 'Product removed from cart' })
   }
@@ -156,6 +149,7 @@ class ProductDetailsWithoutRouter extends React.Component {
 
     if (!product.inStock) return false
     if (!this.isAllAtributesChosen()) return false
+    if (this.isInCart()) return false
     return true
   }
 
@@ -170,16 +164,48 @@ class ProductDetailsWithoutRouter extends React.Component {
     this.setState({ product: newProduct })
   }
 
-  // checks whether product is in cart
-  isInCart = () => {
+  // checks whether a similar product is in cart
+  isSimilarProductInCart = () => {
     const { cart } = this.context
     const { product } = this.state
     return cart.some(cartItem => cartItem.id === product.id)
   }
 
+  // checks whether product with exact same attributes is in cart
+  isInCart = () => {
+    const { cart } = this.context
+    const { product } = this.state
+
+    const isInCart = cart.some((cartItem, index) => {
+      let isEveryAttMatches
+      if (cartItem.id === product.id) {
+        // product in the cart; check if every attribute matches the product in the cart
+        isEveryAttMatches = cart[index].chosenAttributes.every(
+          cartChosenAttribute => {
+            // find index of equivalent cart attribute in the product object
+            const productChosenAttributeIndex =
+              product.chosenAttributes.findIndex(
+                productChosenAttribute =>
+                  productChosenAttribute.attributeID ===
+                  cartChosenAttribute.attributeID
+              )
+            // compare product attribute with the exact same cart attribute
+            return (
+              product.chosenAttributes[productChosenAttributeIndex].itemID ===
+              cartChosenAttribute.itemID
+            )
+          }
+        )
+      }
+      return isEveryAttMatches
+    })
+
+    return isInCart
+  }
+
   render() {
     const { product, mainPicture } = this.state
-    
+
     // wait until {product} is ready in componentDidMount
     if (!product) return null
     return (
@@ -206,19 +232,29 @@ class ProductDetailsWithoutRouter extends React.Component {
             setAttributes={this.setAttributes}
           />
           <Price prices={product.prices} />
+          {this.isSimilarProductInCart() && !this.isInCart() && (
+            <Message>
+              A similar product is already in the cart. If you want to purchase
+              more of this product with different attributes, go ahead. If you
+              just want to change the quantity, use the quantity buttons in the
+              cart.
+            </Message>
+          )}
+          {this.isInCart() && (
+            <Message>
+              This exact same product is in the cart. If you just want to change
+              the quantity, use the quantity buttons in the cart.
+            </Message>
+          )}
           <ButtonsContainer>
             <CTA active={this.isCTAActive()} onClick={this.handleCTAClick}>
-              {product.inStock
-                ? this.isInCart()
-                  ? 'update cart'
-                  : 'add to cart'
-                : 'out of stock'}
+              {product.inStock ? 'add to cart' : 'out of stock'}
             </CTA>
-            {this.isInCart() && (
+            {/* {this.isInCart() && (
               <Button onClick={this.handleRemoveButtonClick}>
                 Remove from Cart
               </Button>
-            )}
+            )} */}
           </ButtonsContainer>
           <Description>{parse(product.description)}</Description>
         </Details>

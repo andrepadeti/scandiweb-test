@@ -26,17 +26,14 @@ const Button = styled.button`
     `}
       
       
-  cursor: pointer;
+  cursor: ${props => props.clickable && 'pointer'};
   background-color: ${props =>
     props.swatch ? props.value : 'var(--c-bg-light)'};
   color: hsla(0, 0%, 16%, 1);
   border: 1px solid #a6a6a6;
-  /* transition: 0.2s; */
 
   &:hover {
     outline: ${props => props.swatch && '2px solid #c4c1c1'};
-    /* background-color: ${props =>
-      props.swatch || 'var(--c-bg-light-hover'};  */
   }
 
   ${props =>
@@ -54,14 +51,24 @@ const ButtonValue = styled.span`
 
 class ButtonGroup extends React.Component {
   handleClick(id) {
-    this.props.setAttributes(id)
+    const { setAttributes } = this.props
+    if (setAttributes) setAttributes(id)
   }
 
   render() {
-    const { product, attributeID, items, attributeType, clickedID, theme } =
-      this.props
+    const {
+      product,
+      attributeID,
+      items,
+      attributeType,
+      clickedID,
+      theme,
+      setAttributes,
+    } = this.props
     // check whether this attribute is a swatch attribute
     const swatch = attributeType === 'swatch'
+    // buttons are clickable if props.setAttributes has been passed
+    const clickable = setAttributes ? true : false
     return (
       <Container>
         {items.map((item, index) => (
@@ -78,6 +85,7 @@ class ButtonGroup extends React.Component {
               })
             }
             active={clickedID === item.id}
+            clickable={clickable}
           >
             <ButtonValue key={'bv' + index}>
               {!swatch && item.displayValue}

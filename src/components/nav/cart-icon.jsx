@@ -34,12 +34,21 @@ const NumberIcon = styled.span`
 class CartIcon extends React.Component {
   static contextType = Context
 
+  numberOfItems = () => {
+    const { cart } = this.context
+    let numberOfItems = 0
+    cart.forEach(item => (numberOfItems += item.quantity))
+    return numberOfItems
+  }
+
   render() {
     const { cart, showMiniCart, setShowMiniCart } = this.context
     return (
-      <Container onClick={() => showMiniCart === false && setShowMiniCart(true)}>
+      <Container
+        onClick={() => showMiniCart === false && setShowMiniCart(true)}
+      >
         <Icon src={shoppingCart} alt="" />
-        {cart.length > 0 && <NumberIcon>{cart.length}</NumberIcon>}
+        {this.numberOfItems() > 0 && <NumberIcon>{this.numberOfItems()}</NumberIcon>}
       </Container>
     )
   }

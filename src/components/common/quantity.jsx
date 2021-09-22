@@ -43,15 +43,35 @@ const TooltipStyled = styled(Tooltip)`
 class Quantity extends React.Component {
   static contextType = Context
 
-  handleQuantityButtonClick = ({ action, productID }) => {
+  handleQuantityButtonClick = ({ action, product }) => {
     const { cart, setCart, toast } = this.context
-    // spread operator is important here, otherwise i'd simply be
-    // passing a reference to the state and changing the state itself
-    let auxCart = [...cart]
 
     // find the right product in the cart array
-    const index = auxCart.findIndex(product => product.id === productID)
+    const index = cart.findIndex((cartItem, index) => {
+      let isEveryAttMatches
+      if (cartItem.id === product.id) {
+        // product in the cart; check if every attribute matches the product in the cart
+        isEveryAttMatches = cart[index].chosenAttributes.every(
+          cartChosenAttribute => {
+            // find index of equivalent cart attribute in the product object
+            const productChosenAttributeIndex =
+              product.chosenAttributes.findIndex(
+                productChosenAttribute =>
+                  productChosenAttribute.attributeID ===
+                  cartChosenAttribute.attributeID
+              )
+            return (
+              product.chosenAttributes[productChosenAttributeIndex].itemID ===
+              cartChosenAttribute.itemID
+            )
+          }
+        )
+      }
+      return isEveryAttMatches
+    })
+
     // change quantity accordingly
+    let auxCart = [...cart]
     if (action === 'increase') auxCart[index].quantity += 1
     if (action === 'decrease') {
       if (auxCart[index].quantity > 0) {
@@ -76,7 +96,7 @@ class Quantity extends React.Component {
           onClick={() =>
             this.handleQuantityButtonClick({
               action: 'increase',
-              productID: product.id,
+              product,
             })
           }
         >
@@ -89,7 +109,7 @@ class Quantity extends React.Component {
           onClick={() =>
             this.handleQuantityButtonClick({
               action: 'decrease',
-              productID: product.id,
+              product,
             })
           }
         >

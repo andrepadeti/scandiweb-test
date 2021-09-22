@@ -35,6 +35,7 @@ const Inside = styled.div`
 const Message = styled.p`
   color: var(--c-text-light);
   font-weight: 500;
+  text-align: center;
 `
 
 class Toaster extends React.Component {
