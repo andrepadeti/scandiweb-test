@@ -8,6 +8,7 @@ const ToastsContainer = styled.div`
   top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1000;
 `
 
 const OutsideBorder = styled.div`

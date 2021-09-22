@@ -87,6 +87,7 @@ class ProductDetailsWithoutRouter extends React.Component {
   }
 
   componentDidMount() {
+    document.body.scrollTop = 0
     this.initializeProduct()
   }
 

@@ -39,7 +39,7 @@ class ProductCardWithoutRouter extends React.Component {
   }
 
   handleClick(product) {
-    if (product.attributes.length === 0) {
+    if (product.attributes.length === 0 && product.inStock) {
       // if product has no attributes, add to cart immediately
       const { cart, setCart, toast } = this.context
 
@@ -85,7 +85,6 @@ class ProductCardWithoutRouter extends React.Component {
             <Card
               inStock={product.inStock}
               inCart={inCart}
-              // onClick={() => this.handleClick(id)}
             >
               <Image
                 inCart={inCart}

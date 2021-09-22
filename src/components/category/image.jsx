@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
@@ -40,13 +40,18 @@ const IconContainer = styled.div`
   right: 1rem;
   padding: 1rem;
   border-radius: 50%;
-  background-color: var(--c-primary);
+  background-color: var(--c-primary-disabled);
   cursor: pointer;
   transition: all 0.2s ease;
 
-  &:hover {
-    background-color: var(--c-primary-hover);
-  }
+  ${props =>
+    props.inStock &&
+    css`
+      background-color: var(--c-primary);
+      &:hover {
+        background-color: var(--c-primary-hover);
+      }
+    `}
 `
 
 const Icon = styled(FontAwesomeIcon)`
@@ -69,8 +74,8 @@ class Image extends React.Component {
       <Container>
         <Img src={images[0]} alt="main" />
         {!inStock && <OutOfStockOverlay>out of stock</OutOfStockOverlay>}
-        <TooltipStyled text="add to cart">
-          <IconContainer onClick={handleClick}>
+        <TooltipStyled text="add to cart" disabled={!inStock}>
+          <IconContainer onClick={handleClick} inStock={inStock}>
             <Icon icon={faShoppingCart} />
           </IconContainer>
         </TooltipStyled>

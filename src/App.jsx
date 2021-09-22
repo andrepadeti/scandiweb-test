@@ -12,7 +12,7 @@ import Cart from './components/cart/cart'
 import Checkout from './components/checkout/checkout'
 
 import { GlobalContext } from './context/context'
-import {CATEGORIES_QUERY} from './utils/queries'
+import { CATEGORIES_QUERY } from './utils/queries'
 
 class AppWithoutQuery extends React.Component {
   // manipulates data into the right format for <Route path>

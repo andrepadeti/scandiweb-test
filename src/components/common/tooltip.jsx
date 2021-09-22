@@ -41,9 +41,10 @@ class Tooltip extends React.Component {
   state = { show: false }
 
   render() {
-    const { className, children, text, arrow, ...rest } = this.props
+    const { className, children, text, arrow, disabled, ...rest } = this.props
     const { show } = this.state
 
+    if (disabled) return <>{children}</>
     return (
       <Container>
         <Span className={className} show={show} arrow={arrow}>
