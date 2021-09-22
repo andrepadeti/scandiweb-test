@@ -1,36 +1,9 @@
 import * as React from 'react'
-import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import ProductDetails from './product-details'
-
-const PRODUCT_DETAILS_QUERY = gql`
-  query Product($id: String!) {
-    product(id: $id) {
-      id
-      name
-      brand
-      gallery
-      description
-      inStock
-      attributes {
-        id
-        name
-        type
-        items {
-          id
-          displayValue
-          value
-        }
-      }
-      prices {
-        currency
-        amount
-      }
-    }
-  }
-`
+import { PRODUCT_QUERY } from '../../utils/queries'
 
 class ProductWithoutRouter extends React.Component {
   state = { productDetails: {} }
@@ -42,7 +15,7 @@ class ProductWithoutRouter extends React.Component {
     } = match
 
     return (
-      <Query query={PRODUCT_DETAILS_QUERY} variables={{ id }}>
+      <Query query={PRODUCT_QUERY} variables={{ id }}>
         {({ data, loading, error }) => {
           if (loading) return <div>Loading</div>
           if (error) return <div>Error</div>

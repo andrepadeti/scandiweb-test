@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
 import Toaster from './components/toast/toaster'
@@ -13,14 +12,7 @@ import Cart from './components/cart/cart'
 import Checkout from './components/checkout/checkout'
 
 import { GlobalContext } from './context/context'
-
-const CATEGORIES_QUERY = gql`
-  query {
-    categories {
-      name
-    }
-  }
-`
+import {CATEGORIES_QUERY} from './utils/queries'
 
 class AppWithoutQuery extends React.Component {
   // manipulates data into the right format for <Route path>

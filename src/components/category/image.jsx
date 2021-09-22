@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 
+import Tooltip from '../common/tooltip'
+
 const Container = styled.div`
   position: relative;
   width: 100%;
@@ -39,25 +41,39 @@ const IconContainer = styled.div`
   padding: 1rem;
   border-radius: 50%;
   background-color: var(--c-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--c-primary-hover);
+  }
 `
 
 const Icon = styled(FontAwesomeIcon)`
   color: var(--c-text-light);
 `
 
+const TooltipStyled = styled(Tooltip)`
+  top: 2rem;
+  left: calc(100% - 2.5rem);
+
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+`
+
 class Image extends React.Component {
   render() {
+    const { images, handleClick, inStock } = this.props
     return (
       <Container>
-        <Img src={this.props.images[0]} alt="main" />
-        {!this.props.inStock && (
-          <OutOfStockOverlay>out of stock</OutOfStockOverlay>
-        )}
-        {this.props.inCart && (
-          <IconContainer>
+        <Img src={images[0]} alt="main" />
+        {!inStock && <OutOfStockOverlay>out of stock</OutOfStockOverlay>}
+        <TooltipStyled text="add to cart">
+          <IconContainer onClick={handleClick}>
             <Icon icon={faShoppingCart} />
           </IconContainer>
-        )}
+        </TooltipStyled>
       </Container>
     )
   }

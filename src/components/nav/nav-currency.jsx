@@ -1,11 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import OutsideClickHandler from 'react-outside-click-handler'
-import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
 import Context from '../../context/context'
 import currencySymbol from '../../utils/currencies'
+import {CURRENCY_QUERY} from '../../utils/queries'
 
 import chevronDown from '../../images/chevron-down.svg'
 import chevronUp from '../../images/chevron-up.svg'
@@ -47,12 +47,6 @@ const MenuItem = styled.div`
     cursor: pointer;
     color: var(--c-primary);
     background-color: hsl(255 0% 0% / 0.03);
-  }
-`
-
-const CURRENCY_QUERY = gql`
-  query {
-    currencies
   }
 `
 

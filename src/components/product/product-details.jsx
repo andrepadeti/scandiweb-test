@@ -70,6 +70,7 @@ class ProductDetailsWithoutRouter extends React.Component {
     product: null,
   }
 
+  // adds chosenAttributes properties to the product object and sets them to null
   initializeProduct() {
     const {
       data: { product },
