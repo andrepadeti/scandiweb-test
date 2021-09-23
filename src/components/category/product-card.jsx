@@ -4,8 +4,9 @@ import { Query } from '@apollo/client/react/components'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
-import currencySymbol from '../../utils/currencies'
+import { isSimilarProductInCart } from '../../utils/product'
 import { PRODUCT_QUERY } from '../../utils/queries'
+import currencySymbol from '../../utils/currencies'
 
 import Image from './image'
 
@@ -43,12 +44,7 @@ class ProductCardWithoutRouter extends React.Component {
       // if product has no attributes, add to cart immediately
       const { cart, setCart, toast } = this.context
 
-      // check whether product is already in the cart
-      const isSimilarProductInCart = cart.some(
-        cartItem => cartItem.id === product.id
-      )
-
-      if (isSimilarProductInCart) {
+      if (isSimilarProductInCart(cart, product)) {
         toast({ message: 'Product is already in the cart', type: 'error' })
       } else {
         // product object is not extensible
@@ -82,10 +78,7 @@ class ProductCardWithoutRouter extends React.Component {
           if (error) return <div>Error</div>
           const { product } = data
           return (
-            <Card
-              inStock={product.inStock}
-              inCart={inCart}
-            >
+            <Card inStock={product.inStock} inCart={inCart}>
               <Image
                 inCart={inCart}
                 images={product.gallery}

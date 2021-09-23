@@ -4,6 +4,7 @@ import parse from 'html-react-parser'
 import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
+import { isSimilarProductInCart, isInCart } from '../../utils/product'
 import Attributes from '../common/attributes'
 import Price from './price'
 import { CTA } from '../common/buttons'
@@ -97,7 +98,7 @@ class ProductDetailsWithoutRouter extends React.Component {
 
   handleCTAClick = () => {
     const { product } = this.state
-    const { toast } = this.context
+    const { cart, setCart, toast } = this.context
     if (!product.inStock) {
       toast({ message: 'This product is out of stock.', type: 'error' })
       return
@@ -108,12 +109,11 @@ class ProductDetailsWithoutRouter extends React.Component {
       return
     }
 
-    if (this.isInCart()) {
+    if (isInCart(cart, product)) {
       toast({ message: 'This product is already in the cart.', type: 'error' })
       return
     }
 
-    const { cart, setCart } = this.context
     const newCart = [...cart]
     newCart.push({ ...product, quantity: 1 })
     setCart(newCart)
@@ -148,10 +148,11 @@ class ProductDetailsWithoutRouter extends React.Component {
 
   isCTAActive() {
     const { product } = this.state
+    const { cart } = this.context
 
     if (!product.inStock) return false
     if (!this.isAllAtributesChosen()) return false
-    if (this.isInCart()) return false
+    if (isInCart(cart, product)) return false
     return true
   }
 
@@ -166,47 +167,9 @@ class ProductDetailsWithoutRouter extends React.Component {
     this.setState({ product: newProduct })
   }
 
-  // checks whether a similar product is in cart
-  isSimilarProductInCart = () => {
-    const { cart } = this.context
-    const { product } = this.state
-    return cart.some(cartItem => cartItem.id === product.id)
-  }
-
-  // checks whether product with exact same attributes is in cart
-  isInCart = () => {
-    const { cart } = this.context
-    const { product } = this.state
-
-    const isInCart = cart.some((cartItem, index) => {
-      let isEveryAttMatches
-      if (cartItem.id === product.id) {
-        // product in the cart; check if every attribute matches the product in the cart
-        isEveryAttMatches = cart[index].chosenAttributes.every(
-          cartChosenAttribute => {
-            // find index of equivalent cart attribute in the product object
-            const productChosenAttributeIndex =
-              product.chosenAttributes.findIndex(
-                productChosenAttribute =>
-                  productChosenAttribute.attributeID ===
-                  cartChosenAttribute.attributeID
-              )
-            // compare product attribute with the exact same cart attribute
-            return (
-              product.chosenAttributes[productChosenAttributeIndex].itemID ===
-              cartChosenAttribute.itemID
-            )
-          }
-        )
-      }
-      return isEveryAttMatches
-    })
-
-    return isInCart
-  }
-
   render() {
     const { product, mainPicture } = this.state
+    const { cart } = this.context
 
     // wait until {product} is ready in componentDidMount
     if (!product) return null
@@ -234,15 +197,16 @@ class ProductDetailsWithoutRouter extends React.Component {
             setAttributes={this.setAttributes}
           />
           <Price prices={product.prices} />
-          {this.isSimilarProductInCart() && !this.isInCart() && (
-            <Message>
-              A similar product is already in the cart. If you want to purchase
-              more of this product with different attributes, go ahead. If you
-              just want to change the quantity, use the quantity buttons in the
-              cart.
-            </Message>
-          )}
-          {this.isInCart() && (
+          {isSimilarProductInCart(cart, product) &&
+            !isInCart(cart, product) && (
+              <Message>
+                A similar product is already in the cart. If you want to
+                purchase more of this product with different attributes, go
+                ahead. If you just want to change the quantity, use the quantity
+                buttons in the cart.
+              </Message>
+            )}
+          {isInCart(cart, product) && (
             <Message>
               This exact same product is in the cart. If you just want to change
               the quantity, use the quantity buttons in the cart.
@@ -252,7 +216,7 @@ class ProductDetailsWithoutRouter extends React.Component {
             <CTA active={this.isCTAActive()} onClick={this.handleCTAClick}>
               {product.inStock ? 'add to cart' : 'out of stock'}
             </CTA>
-            {/* {this.isInCart() && (
+            {/* {isInCart(cart, product) && (
               <Button onClick={this.handleRemoveButtonClick}>
                 Remove from Cart
               </Button>
