@@ -54,7 +54,7 @@ class CartItem extends React.Component {
   }
 
   render() {
-    const { product, setAttributes } = this.props
+    const { product } = this.props
     return (
       <Container>
         <Details>

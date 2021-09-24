@@ -10,10 +10,9 @@ import Total from '../common/total'
 import { Button, CTA } from '../common/buttons'
 
 const Overlay = styled.section`
-  position: absolute;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  inset: 5rem 0 0 0;
+  z-index: 5;
   background-color: hsla(247, 13%, 25%, 0.22);
 `
 
@@ -22,7 +21,6 @@ const Container = styled.div`
   right: 3rem;
   inline-size: 380px;
   padding: 1rem 1rem 1rem 1rem;
-  /* margin-inline-end: 1rem; */
   background-color: var(--c-bg-light);
 `
 
@@ -129,7 +127,8 @@ class MiniCartWithoutRouter extends React.Component {
       <Overlay>
         <OutsideClickHandler
           onOutsideClick={() =>
-            // had to setTimeout because this click event clashes with click event in CartIcon component
+            // had to setTimeout because this click event clashes with 
+            // click event in CartIcon component
             setTimeout(this.handleOutsideClick, 100)
           }
         >

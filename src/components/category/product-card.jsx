@@ -12,7 +12,11 @@ import Image from './image'
 
 const Card = styled.div`
   padding: 1rem;
-  box-shadow: 0px 0px 35px hsla(210, 5%, 67%, 0.6);
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 0px 35px hsla(210, 5%, 67%, 0.6);
+  }
 `
 const ItemName = styled.h2`
   font-size: 18px;
@@ -39,23 +43,28 @@ class ProductCardWithoutRouter extends React.Component {
     return `${currencySymbol(currency)} ${amount}`
   }
 
-  handleClick(product) {
-    if (product.attributes.length === 0 && product.inStock) {
+  handleClick(product, { component }) {
+    if (
+      product.attributes.length === 0 &&
+      product.inStock &&
+      component === 'icon'
+    ) {
       // if product has no attributes, add to cart immediately
       const { cart, setCart, toast } = this.context
 
       if (isSimilarProductInCart(cart, product)) {
         toast({ message: 'Product is already in the cart', type: 'error' })
       } else {
-        // product object is not extensible
-        let newProduct = JSON.parse(JSON.stringify(product))
+        // product object comes with preventExtensions. This is one way to remove it:
+        product = Object.assign({}, product)
+
         // chosenAttributes is empty since there are no attributes to choose from
-        newProduct.chosenAttributes = []
+        product.chosenAttributes = []
+
         // add to cart
         const newCart = [...cart]
-        newCart.push({ ...newProduct, quantity: 1 })
+        newCart.push({ ...product, quantity: 1 })
         setCart(newCart)
-
         toast({ message: 'Added too cart.' })
       }
     } else {
@@ -78,12 +87,18 @@ class ProductCardWithoutRouter extends React.Component {
           if (error) return <div>Error</div>
           const { product } = data
           return (
-            <Card inStock={product.inStock} inCart={inCart}>
+            <Card
+              inStock={product.inStock}
+              inCart={inCart}
+              onClick={() => this.handleClick(product, { component: 'card' })}
+            >
               <Image
                 inCart={inCart}
                 images={product.gallery}
                 inStock={product.inStock}
-                handleClick={() => this.handleClick(product)}
+                handleClick={() =>
+                  this.handleClick(product, { component: 'icon' })
+                }
               />
               <ItemBrand>{product.brand}</ItemBrand>
               <ItemName>{product.name}</ItemName>

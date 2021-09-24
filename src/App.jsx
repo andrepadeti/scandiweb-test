@@ -44,8 +44,8 @@ class AppWithoutQuery extends React.Component {
     if (data.loading) return <div>Loading...</div>
     if (data.error) return <div>{data.error.toString()}</div>
 
-    // data comes with preventExtensions. This is one way to remove it:
     let { categories } = data
+    // data object comes with preventExtensions. This is one way to remove it:
     categories = Object.assign([], categories)
     // now I can add elements to it
     categories.unshift({ name: 'all' })

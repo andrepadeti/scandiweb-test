@@ -5,7 +5,7 @@ import { graphql } from '@apollo/client/react/hoc'
 
 import Context from '../../context/context'
 import currencySymbol from '../../utils/currencies'
-import {CURRENCY_QUERY} from '../../utils/queries'
+import { CURRENCY_QUERY } from '../../utils/queries'
 
 import chevronDown from '../../images/chevron-down.svg'
 import chevronUp from '../../images/chevron-up.svg'
@@ -28,12 +28,14 @@ const P = styled.p`
 
 const CurrencyDropDownMenu = styled.div`
   position: absolute;
+  z-index: 1;
   top: 150%;
   right: -50%;
   width: 7rem;
   display: flex;
   flex-direction: column;
   padding-block: 0.5rem;
+  background-color: var(--c-bg-light);
   box-shadow: 0px 0px 15px hsla(210, 5%, 67%, 0.6);
 
   font-size: 18px;
@@ -55,15 +57,13 @@ class NavCurrencyWithoutQuery extends React.Component {
   state = { showDropDown: false }
 
   handleShowDropDown = () => {
-    const { showDropDown } = this.state
-    this.setState({ showDropDown: !showDropDown })
+    this.setState(state => {
+      return { showDropDown: !state.showDropDown }
+    })
   }
 
   handleOutsideClick = () => {
-    const { showDropDown } = this.state
-    if (showDropDown) {
-      this.setState({ showDropDown: !showDropDown })
-    }
+    this.setState({ showDropDown: false })
   }
 
   handleChangeCurrency = currency => {
@@ -80,11 +80,14 @@ class NavCurrencyWithoutQuery extends React.Component {
     if (data.error) return <div>Error</div>
     return (
       <Currency>
-        <Container onClick={this.handleShowDropDown}>
-          <P>{currencySymbol(currency)}</P>
-          <img src={this.state.showDropDown ? chevronUp : chevronDown} alt="" />
-        </Container>
         <OutsideClickHandler onOutsideClick={this.handleOutsideClick}>
+          <Container onClick={this.handleShowDropDown}>
+            <P>{currencySymbol(currency)}</P>
+            <img
+              src={this.state.showDropDown ? chevronUp : chevronDown}
+              alt=""
+            />
+          </Container>
           {this.state.showDropDown && (
             <CurrencyDropDownMenu>
               {data.currencies.map((currency, index) => (

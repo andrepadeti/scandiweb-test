@@ -42,13 +42,15 @@ class CartIcon extends React.Component {
   }
 
   render() {
-    const { cart, showMiniCart, setShowMiniCart } = this.context
+    const { showMiniCart, setShowMiniCart } = this.context
     return (
       <Container
         onClick={() => showMiniCart === false && setShowMiniCart(true)}
       >
         <Icon src={shoppingCart} alt="" />
-        {this.numberOfItems() > 0 && <NumberIcon>{this.numberOfItems()}</NumberIcon>}
+        {this.numberOfItems() > 0 && (
+          <NumberIcon>{this.numberOfItems()}</NumberIcon>
+        )}
       </Container>
     )
   }

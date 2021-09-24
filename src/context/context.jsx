@@ -29,6 +29,12 @@ export class GlobalContext extends React.Component {
   }
 
   setShowMiniCart = value => {
+    // prevent page scrolling when cart overlay is showing
+    if (value === true) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
     this.setState({ showMiniCart: value })
   }
 

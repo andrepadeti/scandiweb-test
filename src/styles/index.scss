@@ -19,7 +19,17 @@ html {
   color: var(--c-text);
 }
 
+li {
+  margin-left: 1rem;
+}
+
 .active-link {
   color: var(--c-primary);
   border-bottom: 1px solid var(--c-primary);
+}
+
+.overflow-hidden {
+  overflow-y: hidden;
+  // prevent horizontal reflow when scrollbar is hidden
+  padding-inline-end: 15px;
 }
