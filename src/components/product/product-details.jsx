@@ -118,7 +118,7 @@ class ProductDetailsWithoutRouter extends React.Component {
     newCart.push({ ...product, quantity: 1 })
     setCart(newCart)
 
-    toast({ message: 'Added too cart.' })
+    toast({ message: 'Added to cart.' })
     this.initializeProduct()
   }
 

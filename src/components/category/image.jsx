@@ -70,7 +70,7 @@ const TooltipStyled = styled(Tooltip)`
 class Image extends React.Component {
   render() {
     const { images, handleClick, inStock } = this.props
-    
+
     return (
       <Container>
         <Img src={images[0]} alt="main" />

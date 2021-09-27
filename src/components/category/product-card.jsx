@@ -65,7 +65,7 @@ class ProductCardWithoutRouter extends React.Component {
         const newCart = [...cart]
         newCart.push({ ...product, quantity: 1 })
         setCart(newCart)
-        toast({ message: 'Added too cart.' })
+        toast({ message: 'Added to cart.' })
       }
     } else {
       // send to PDP to choose attributes before adding to cart
@@ -96,9 +96,12 @@ class ProductCardWithoutRouter extends React.Component {
                 inCart={inCart}
                 images={product.gallery}
                 inStock={product.inStock}
-                handleClick={() =>
+                handleClick={e => {
+                  // stopPropagation is important here because the parent component
+                  // is also listening for onClick events
+                  e.stopPropagation()
                   this.handleClick(product, { component: 'icon' })
-                }
+                }}
               />
               <ItemBrand>{product.brand}</ItemBrand>
               <ItemName>{product.name}</ItemName>

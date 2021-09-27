@@ -50,6 +50,11 @@ export const PRODUCT_QUERY = gql`
       description
       inStock
       attributes {
+        # disable apollo caching for attributes
+        # apollo was mixing attributes for different products
+        # this article explains it all:
+        # https://kamranicus.com/graphql-apollo-object-caching/
+        __typename @skip(if: true)
         id
         name
         type
@@ -66,4 +71,3 @@ export const PRODUCT_QUERY = gql`
     }
   }
 `
-

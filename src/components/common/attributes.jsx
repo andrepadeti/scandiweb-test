@@ -18,12 +18,10 @@ const Attribute = styled.h3`
   ${props =>
     props.theme === 'mini-cart' &&
     css`
+      margin-block-start: 0.4rem;
+      margin-block-end: 0.2rem;
       font-size: 12px;
     `}
-`
-
-const Gap = styled.div`
-  margin-block-start: ${props => props.value};
 `
 
 class Attributes extends React.Component {
@@ -45,9 +43,7 @@ class Attributes extends React.Component {
 
           return (
             <React.Fragment key={'attr' + index}>
-              {theme === 'mini-cart' && <Gap value="0.4rem" />}
               <Attribute theme={theme}>{attribute.name}:</Attribute>
-              {theme === 'mini-cart' && <Gap value="0.2rem" />}
               <ButtonGroup
                 theme={theme}
                 product={product}
