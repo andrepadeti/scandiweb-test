@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router'
+import { useLocation } from 'react-router'
 
 import logo from '../../images/logo.svg'
 
@@ -39,30 +39,26 @@ const RightSide = styled.div`
   gap: 2rem;
 `
 
-class NavWithoutRouter extends React.Component {
-  render() {
-    //get current pathname
-    const pathname = this.props.location.pathname.substring(1)
+const Nav = ({ categories }) => {
+  const { pathname } = useLocation()
 
-    return (
-      <Navbar>
-        <LeftSide>
-          <NavCategories
-            categories={this.props.categories}
-            pathname={pathname}
-          />
-        </LeftSide>
-        <Logo>
-          <img src={logo} alt="our logo" />
-        </Logo>
-        <RightSide>
-          <NavCurrency />
-          <CartIcon />
-        </RightSide>
-      </Navbar>
-    )
-  }
+  return (
+    <Navbar>
+      <LeftSide>
+        <NavCategories
+          categories={categories}
+          pathname={pathname.substring(1)}
+        />
+      </LeftSide>
+      <Logo>
+        <img src={logo} alt="our logo" />
+      </Logo>
+      <RightSide>
+        <NavCurrency />
+        <CartIcon />
+      </RightSide>
+    </Navbar>
+  )
 }
 
-const Nav = withRouter(NavWithoutRouter)
 export default Nav

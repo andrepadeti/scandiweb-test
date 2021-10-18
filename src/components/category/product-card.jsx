@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Query } from '@apollo/client/react/components'
-import { withRouter } from 'react-router'
+import { useQuery } from '@apollo/client'
+import { useLocation, useHistory } from 'react-router'
 
 import Context from '../../context/context'
 import { isSimilarProductInCart } from '../../utils/product'
@@ -34,24 +34,23 @@ const ItemPrice = styled.p`
   font-weight: 500;
 `
 
-class ProductCardWithoutRouter extends React.Component {
-  static contextType = Context
+const ProductCard = ({ product: { id }, inCart }) => {
+  const { cart, setCart, toast, currency } = React.useContext(Context)
+  const history = useHistory()
+  const { pathname } = useLocation()
 
-  priceInSelectedCurrency(prices) {
-    const { currency } = this.context
+  const priceInSelectedCurrency = prices => {
     const { amount } = prices.find(price => price.currency === currency)
     return `${currencySymbol(currency)} ${amount}`
   }
 
-  handleClick(product, { component }) {
+  const handleClick = (product, { component }) => {
     if (
       product.attributes.length === 0 &&
       product.inStock &&
       component === 'icon'
     ) {
       // if product has no attributes, add to cart immediately
-      const { cart, setCart, toast } = this.context
-
       if (isSimilarProductInCart(cart, product)) {
         toast({ message: 'Product is already in the cart', type: 'error' })
       } else {
@@ -69,52 +68,39 @@ class ProductCardWithoutRouter extends React.Component {
       }
     } else {
       // send to PDP to choose attributes before adding to cart
-      const { history, location } = this.props
-      history.push(`${location.pathname}/${product.id}`)
+      history.push(`${pathname}/${product.id}`)
     }
   }
 
-  render() {
-    const {
-      product: { id },
-      inCart,
-    } = this.props
+  const { loading, error, data } = useQuery(PRODUCT_QUERY, {
+    variables: { id },
+  })
+  if (loading) return <div>Loading</div>
+  if (error) return <div>Error</div>
+  const { product } = data
 
-    return (
-      <Query query={PRODUCT_QUERY} variables={{ id }}>
-        {({ data, loading, error }) => {
-          if (loading) return <div>Loading</div>
-          if (error) return <div>Error</div>
-          const { product } = data
-          return (
-            <Card
-              inStock={product.inStock}
-              inCart={inCart}
-              onClick={() => this.handleClick(product, { component: 'card' })}
-            >
-              <Image
-                inCart={inCart}
-                images={product.gallery}
-                inStock={product.inStock}
-                handleClick={e => {
-                  // stopPropagation is important here because the parent component
-                  // is also listening for onClick events
-                  e.stopPropagation()
-                  this.handleClick(product, { component: 'icon' })
-                }}
-              />
-              <ItemBrand>{product.brand}</ItemBrand>
-              <ItemName>{product.name}</ItemName>
-              <ItemPrice>
-                {this.priceInSelectedCurrency(product.prices)}
-              </ItemPrice>
-            </Card>
-          )
+  return (
+    <Card
+      inStock={product.inStock}
+      inCart={inCart}
+      onClick={() => handleClick(product, { component: 'card' })}
+    >
+      <Image
+        inCart={inCart}
+        images={product.gallery}
+        inStock={product.inStock}
+        handleClick={e => {
+          // stopPropagation is important here because the parent component
+          // is also listening for onClick events
+          e.stopPropagation()
+          handleClick(product, { component: 'icon' })
         }}
-      </Query>
-    )
-  }
+      />
+      <ItemBrand>{product.brand}</ItemBrand>
+      <ItemName>{product.name}</ItemName>
+      <ItemPrice>{priceInSelectedCurrency(product.prices)}</ItemPrice>
+    </Card>
+  )
 }
 
-const ProductCard = withRouter(ProductCardWithoutRouter)
 export default ProductCard
