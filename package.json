@@ -25,6 +25,7 @@
   "resolutions": {
     "styled-components": "^5"
   },
+  "proxy": "https://padeti-storefront.herokuapp.com",
   "scripts": {
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
