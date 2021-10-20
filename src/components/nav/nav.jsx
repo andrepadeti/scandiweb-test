@@ -1,12 +1,15 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { useLocation } from 'react-router'
+import { useMediaQuery } from '../../utils/media-query'
 
 import logo from '../../images/logo.svg'
 
 import NavCurrency from './nav-currency'
 import NavCategories from './nav-categories'
 import CartIcon from './cart-icon'
+
+import { device } from '../../styles/device'
 
 const Navbar = styled.nav`
   display: flex;
@@ -41,6 +44,7 @@ const RightSide = styled.div`
 
 const Nav = ({ categories }) => {
   const { pathname } = useLocation()
+  const isMobile = useMediaQuery(device.mobile)
 
   return (
     <Navbar>

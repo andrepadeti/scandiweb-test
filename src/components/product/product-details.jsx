@@ -2,19 +2,29 @@ import * as React from 'react'
 import styled from 'styled-components'
 import parse from 'html-react-parser'
 import { withRouter } from 'react-router'
+import { withMediaQuery } from '../../utils/media-query'
 
 import Context from '../../context/context'
 import { isSimilarProductInCart, isInCart } from '../../utils/product'
 import Attributes from '../common/attributes'
 import Price from './price'
 import { CTA } from '../common/buttons'
-// import { Button } from '../common/buttons'
+import ImagesCarousel from '../common/carousel/images-carousel'
+
+import { device } from '../../styles/device'
 
 const Container = styled.section`
   padding-inline: 3rem;
   padding-block: 3rem;
   display: flex;
+  flex-direction: row;
   gap: 2rem;
+
+  @media ${device.mobile} {
+    flex-direction: column;
+    padding-inline: 1em;
+    gap: 4rem;
+  }
 `
 
 const ThumbnailsContainer = styled.div`
@@ -64,7 +74,7 @@ const Message = styled.p`
   font-size: 14px;
 `
 
-class ProductDetailsWithoutRouter extends React.Component {
+class BareProductDetails extends React.Component {
   static contextType = Context
   state = {
     mainPicture: 0,
@@ -169,25 +179,34 @@ class ProductDetailsWithoutRouter extends React.Component {
 
   render() {
     const { product, mainPicture } = this.state
+    const { isMobile } = this.props
     const { cart } = this.context
 
     // wait until {product} is ready in componentDidMount
     if (!product) return null
     return (
       <Container>
-        <ThumbnailsContainer>
-          {product.gallery.map((product, index) => (
-            <ThumbanilsImg
-              src={product}
-              key={'tn' + index}
-              alt="thumbnail"
-              onClick={() => this.handleThumbnailClick(index)}
-            />
-          ))}
-        </ThumbnailsContainer>
-        <MainPicture>
-          <img src={product.gallery[mainPicture]} alt="main" />
-        </MainPicture>
+        {isMobile ? (
+          <ImagesCarousel gallery={product.gallery} />
+        ) : (
+          <>
+            <ThumbnailsContainer>
+              {product.gallery.map((product, index) => (
+                <ThumbanilsImg
+                  src={product}
+                  key={'tn' + index}
+                  alt="thumbnail"
+                  onClick={() => this.handleThumbnailClick(index)}
+                />
+              ))}
+            </ThumbnailsContainer>
+
+            <MainPicture>
+              <img src={product.gallery[mainPicture]} alt="main" />
+            </MainPicture>
+          </>
+        )}
+
         <Details>
           <Brand>{product.brand}</Brand>
           <ProductName>{product.name}</ProductName>
@@ -229,5 +248,5 @@ class ProductDetailsWithoutRouter extends React.Component {
   }
 }
 
-const ProductDetails = withRouter(ProductDetailsWithoutRouter)
+const ProductDetails = withRouter(withMediaQuery(BareProductDetails))
 export default ProductDetails

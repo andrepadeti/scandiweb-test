@@ -6,11 +6,11 @@ import Tooltip from '../common/tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 
-const QuantityContainer = styled.div`
-  flex: 0 0 10%;
+const Container = styled.div`
+  /* flex: 0 0 10%; */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 `
 
@@ -89,7 +89,7 @@ class Quantity extends React.Component {
     const { product, big } = this.props
 
     return (
-      <QuantityContainer>
+      <Container>
         <Box
           big={big}
           withBorder={true}
@@ -121,7 +121,7 @@ class Quantity extends React.Component {
             '-'
           )}
         </Box>
-      </QuantityContainer>
+      </Container>
     )
   }
 }

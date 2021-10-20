@@ -1,19 +1,28 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { withMediaQuery } from '../../utils/media-query'
 
 import Context from '../../context/context'
 import Attributes from '../common/attributes'
 import Quantity from '../common/quantity'
-import ImagesCarousel from './carousel/images-carousel'
+import ImagesCarousel from '../common/carousel/images-carousel'
 import currencySymbol from '../../utils/currencies'
 import Tooltip from '../common/tooltip'
+
+import { device } from '../../styles/device'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 
 const Container = styled.div`
   display: flex;
+  flex-direction: row;
   margin-block: 3rem;
+
+  @media ${device.mobile} {
+    flex-direction: column;
+    gap: 1em;
+  }
 `
 
 const RemoveItem = styled.div`
@@ -54,7 +63,13 @@ const Price = styled.div`
   font-weight: 700;
 `
 
-class CartItem extends React.Component {
+const SmallContainer = styled.div`
+  flex: 0 0 40%;
+  display: flex;
+  gap: 1em;
+`
+
+class BareCartItem extends React.Component {
   static contextType = Context
 
   setAttributes = attributes => {
@@ -95,18 +110,20 @@ class CartItem extends React.Component {
   }
 
   render() {
-    const { product } = this.props
+    const { product, isMobile } = this.props
 
     return (
       <Container>
-        <RemoveItem>
-          <TooltipStyled text="remove from cart">
-            <RemoveItemIcon
-              icon={faTrashAlt}
-              onClick={this.handleRemoveButtonClick}
-            />
-          </TooltipStyled>
-        </RemoveItem>
+        {!isMobile && (
+          <RemoveItem>
+            <TooltipStyled text="remove from cart">
+              <RemoveItemIcon
+                icon={faTrashAlt}
+                onClick={this.handleRemoveButtonClick}
+              />
+            </TooltipStyled>
+          </RemoveItem>
+        )}
         <Details>
           <Brand>{product.brand}</Brand>
           <ProductName>{product.name}</ProductName>
@@ -117,11 +134,14 @@ class CartItem extends React.Component {
             // setAttributes={this.setAttributes}
           />
         </Details>
-        <Quantity big product={product} />
-        <ImagesCarousel gallery={product.gallery} />
+        <SmallContainer>
+          <Quantity big product={product} />
+          <ImagesCarousel gallery={product.gallery} />
+        </SmallContainer>
       </Container>
     )
   }
 }
 
+const CartItem = withMediaQuery(BareCartItem)
 export default CartItem

@@ -127,7 +127,7 @@ class MiniCartWithoutRouter extends React.Component {
       <Overlay>
         <OutsideClickHandler
           onOutsideClick={() =>
-            // had to setTimeout because this click event clashes with 
+            // had to setTimeout because this click event clashes with
             // click event in CartIcon component
             setTimeout(this.handleOutsideClick, 100)
           }

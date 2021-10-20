@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import ClickContainer from './click-container'
 
 const Container = styled.div`
-  flex: 0 0 30%;
+  /* flex: 0 0 100%; */
+  margin: auto;
   position: relative;
   user-select: none;
 `

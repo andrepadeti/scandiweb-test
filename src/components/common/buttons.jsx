@@ -25,6 +25,12 @@ export const CTA = styled(Button)`
   cursor: default;
 
   ${props =>
+    props.stretch &&
+    css`
+      width: 100%;
+    `}
+
+  ${props =>
     props.active &&
     css`
       background-color: var(--c-primary);
