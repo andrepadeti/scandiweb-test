@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router'
 
 import Context from '../../context/context'
 import shoppingCart from '../../images/shopping-cart.svg'
@@ -31,7 +32,7 @@ const NumberIcon = styled.span`
   font-weight: 700;
 `
 
-class CartIcon extends React.Component {
+class BareCartIcon extends React.Component {
   static contextType = Context
 
   numberOfItems = () => {
@@ -41,12 +42,21 @@ class CartIcon extends React.Component {
     return numberOfItems
   }
 
-  render() {
+  handleClick = () => {
+    const { isMobile } = this.props
     const { showMiniCart, setShowMiniCart } = this.context
+    const { history } = this.props
+
+    if (isMobile) {
+      history.push('/cart')
+    } else {
+      showMiniCart === false && setShowMiniCart(true)
+    }
+  }
+
+  render() {
     return (
-      <Container
-        onClick={() => showMiniCart === false && setShowMiniCart(true)}
-      >
+      <Container onClick={this.handleClick}>
         <Icon src={shoppingCart} alt="" />
         {this.numberOfItems() > 0 && (
           <NumberIcon>{this.numberOfItems()}</NumberIcon>
@@ -56,4 +66,5 @@ class CartIcon extends React.Component {
   }
 }
 
+const CartIcon = withRouter(BareCartIcon)
 export default CartIcon

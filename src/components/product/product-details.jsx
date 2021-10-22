@@ -14,8 +14,8 @@ import ImagesCarousel from '../common/carousel/images-carousel'
 import { device } from '../../styles/device'
 
 const Container = styled.section`
-  padding-inline: 3rem;
-  padding-block: 3rem;
+  padding-inline: 3em;
+  padding-block: var(--padding-block-start) 3em;
   display: flex;
   flex-direction: row;
   gap: 2rem;

@@ -134,6 +134,7 @@ class MiniCartWithoutRouter extends React.Component {
         >
           <Container>
             <ScrollArea>
+              {process.env.REACT_APP_DUMMY_CART && <h3>Dummy Cart</h3>}
               <Title>
                 My bag,{' '}
                 <NumberOfItems>

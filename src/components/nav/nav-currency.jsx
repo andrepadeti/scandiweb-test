@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import OutsideClickHandler from 'react-outside-click-handler'
 import { useQuery } from '@apollo/client'
 
@@ -27,23 +27,34 @@ const P = styled.p`
 `
 
 const CurrencyDropDownMenu = styled.div`
-  position: absolute;
-  z-index: 1;
-  top: 150%;
-  right: -50%;
-  width: 7rem;
   display: flex;
   flex-direction: column;
   padding-block: 0.5rem;
-  background-color: var(--c-bg-light);
-  box-shadow: 0px 0px 15px hsla(210, 5%, 67%, 0.6);
 
-  font-size: 18px;
+  ${props => {
+    if (props.mobile) {
+      return css`
+        gap: 1em;
+      `
+    } else {
+      return css`
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        right: -50%;
+        width: 8rem;
+        box-shadow: 0px 0px 15px hsla(210, 5%, 67%, 0.6);
+        background-color: var(--c-bg-light);
+        font-size: 18px;
+      `
+    }
+  }}
 `
 
 const MenuItem = styled.div`
   padding-block: 0.5rem;
-  padding-inline: 1rem;
+  padding-inline: ${props => (props.mobile ? '' : '1em')};
+  font-weight: ${props => props.active && 'bold'};
 
   &:hover {
     cursor: pointer;
@@ -51,24 +62,36 @@ const MenuItem = styled.div`
     background-color: hsl(255 0% 0% / 0.03);
   }
 `
+const CurrencyTitle = styled.div`
+  font-family: 'Roboto Condensed', sans-serif;
+  text-transform: uppercase;
+  margin-block-end: 1rem; ;
+`
 
-const NavCurrency = () => {
+const NavCurrency = ({
+  isMobile,
+  handleClick = () => {},
+  // showCurrencyDropDown,
+  // setShowCurrencyDropDown,
+}) => {
+  // console.log(showCurrencyDropDown)
   const { currency, setCurrency } = React.useContext(Context)
-  const [show, setShow] = React.useState(false)
+  const [showCurrencyDropDown, setShowCurrencyDropDown] = React.useState(false)
 
   const { loading, error, data } = useQuery(CURRENCY_QUERY)
 
   const handleShowDropDown = () => {
-    setShow(prevState => !prevState)
+    setShowCurrencyDropDown(prevState => !prevState)
   }
 
   const handleOutsideClick = () => {
-    setShow(false)
+    setShowCurrencyDropDown(false)
   }
 
   const handleChangeCurrency = newCurrency => {
     setCurrency(newCurrency)
     handleShowDropDown()
+    handleClick()
   }
 
   if (loading) return <div>Loading...</div>
@@ -77,17 +100,28 @@ const NavCurrency = () => {
     <Currency>
       <OutsideClickHandler onOutsideClick={handleOutsideClick}>
         <Container onClick={handleShowDropDown}>
-          <P>{currencySymbol(currency)}</P>
-          <img src={show ? chevronUp : chevronDown} alt="" />
+          {isMobile ? (
+            <CurrencyTitle>Change Currency</CurrencyTitle>
+          ) : (
+            <>
+              <P>{currencySymbol(currency)}</P>
+              <img
+                src={showCurrencyDropDown ? chevronUp : chevronDown}
+                alt=""
+              />
+            </>
+          )}
         </Container>
-        {show && (
-          <CurrencyDropDownMenu>
-            {data.currencies.map((currency, index) => (
+        {showCurrencyDropDown && (
+          <CurrencyDropDownMenu mobile={isMobile}>
+            {data.currencies.map((_currency, index) => (
               <MenuItem
+                mobile={isMobile}
                 key={index}
-                onClick={() => handleChangeCurrency(currency)}
+                onClick={() => handleChangeCurrency(_currency)}
+                active={currency === _currency}
               >
-                {currencySymbol(currency) + ` ${currency}`}
+                {currencySymbol(_currency) + ` ${_currency}`}
               </MenuItem>
             ))}
           </CurrencyDropDownMenu>

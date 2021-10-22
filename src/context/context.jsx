@@ -8,7 +8,7 @@ export class GlobalContext extends React.Component {
     currency: 'USD',
     categories: [],
     currentProduct: {},
-    cart: dummyCart,
+    cart: process.env.REACT_APP_DUMMY_CART ? dummyCart : [],
     showMiniCart: false,
     toasts: [],
   }

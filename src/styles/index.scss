@@ -4,6 +4,7 @@
 
 :root {
   --c-primary: hsl(136, 53%, 59%);
+  --c-primary-background: hsl(136, 53%, 59%);
   --c-primary-disabled: hsl(137, 22%, 75%);
   --c-primary-hover: hsl(136, 48%, 46%);
   --c-text: hsl(216, 8%, 12%);
@@ -12,6 +13,8 @@
   --c-bg-light: white;
   --c-bg-light-hover: hsl(0, 0%, 85%);
   --c-error: hsl(0, 57%, 55%);
+
+  --padding-block-start: 8em;
 }
 
 html {
@@ -21,11 +24,6 @@ html {
 
 li {
   margin-left: 1rem;
-}
-
-.active-link {
-  color: var(--c-primary);
-  border-bottom: 1px solid var(--c-primary);
 }
 
 .overflow-hidden {

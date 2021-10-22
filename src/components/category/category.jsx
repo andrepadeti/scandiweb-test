@@ -5,7 +5,7 @@ import ProductsGrid from './products-grid'
 
 const Container = styled.section`
   padding-inline: 3rem;
-  padding-block-start: 3rem;
+  padding-block-start: var(--padding-block-start);
 `
 
 const Title = styled.h1`

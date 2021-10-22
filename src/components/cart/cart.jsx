@@ -9,8 +9,8 @@ import Total from '../common/total'
 import { CTA } from '../common/buttons'
 
 const Container = styled.section`
-  padding-inline: 3rem;
-  padding-block: 3rem;
+  padding-inline: 3em;
+  padding-block: var(--padding-block-start) 3em;
 `
 
 const Title = styled.h1`
@@ -39,7 +39,7 @@ class BareCart extends React.Component {
 
     return (
       <Container>
-        {/* <h1>Dummy Cart</h1> */}
+        {process.env.REACT_APP_DUMMY_CART && <h3>Dummy Cart</h3>}
         <Title>Cart</Title>
         <Hr />
         {cart.map((product, index) => (

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+// import { useMediaQuery } from './utils/media-query'
+// import { device } from './styles/device'
 
 import Toaster from './components/toast/toaster'
 import MiniCart from './components/mini-cart/mini-cart'
