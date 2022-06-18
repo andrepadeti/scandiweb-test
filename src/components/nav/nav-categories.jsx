@@ -13,8 +13,8 @@ const SessionLink = styled(Link)`
   }
 
   ${props => {
-    if (props.active) {
-      if (props.mobile) {
+    if (props.$active) {
+      if (props.$mobile) {
         return css`
           font-weight: bold;
         `
@@ -43,8 +43,8 @@ class NavCategories extends React.Component {
             onClick={handleClick}
             key={index}
             to={`/${category.name}`}
-            active={pathname === category.name}
-            mobile={mobile}
+            $active={pathname === category.name}
+            $mobile={mobile}
           >
             {category.name}
           </SessionLink>

@@ -31,6 +31,8 @@ const ScrollArea = styled.div`
   // to accomodate the scrollbar neatly
   margin-inline-end: -1rem;
   padding-inline-end: 1rem;
+  // plus this trick to keep layout consistent
+  scrollbar-gutter: stable;
 
   margin-block-end: 1rem;
   overflow: auto;

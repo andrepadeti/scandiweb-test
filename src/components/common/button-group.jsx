@@ -36,7 +36,7 @@ const Button = styled.button`
     props.theme !== 'mini-cart' &&
     !props.active &&
     css`
-      &:hover {
+      &:hover, &:focus {
         outline: ${props => props.swatch && '2px solid #c4c1c1'};
       }
     `}

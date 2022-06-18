@@ -20,7 +20,7 @@ const Navbar = styled.nav`
   right: 0;
 
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 
   --padding: 3em;
   padding-inline: var(--padding);
