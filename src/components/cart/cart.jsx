@@ -1,16 +1,16 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router'
+import { withMediaQuery } from '../../utils/media-query'
 
 import Context from '../../context/context'
 import CartItem from './cart-item'
 import Total from '../common/total'
-
-// import { dummyCart } from '../../utils/dummy-cart'
+import { CTA } from '../common/buttons'
 
 const Container = styled.section`
-  padding-inline: 3rem;
-  padding-block: 3rem;
+  padding-inline: 3em;
+  padding-block: var(--padding-block-start) 3em;
 `
 
 const Title = styled.h1`
@@ -25,16 +25,21 @@ const Hr = styled.hr`
   border-top: 1px solid hsla(0, 0%, 90%, 1);
 `
 
-class CartWithoutRouter extends React.Component {
+class BareCart extends React.Component {
   static contextType = Context
+
+  handleCheckoutButtonClick = () => {
+    const { history } = this.props
+    history.push('/checkout')
+  }
 
   render() {
     const { cart } = this.context
-    // const cart = dummyCart
+    const { isMobile } = this.props
 
     return (
       <Container>
-        {/* <h1>Dummy Cart</h1> */}
+        {process.env.REACT_APP_DUMMY_CART && <h3>Dummy Cart</h3>}
         <Title>Cart</Title>
         <Hr />
         {cart.map((product, index) => (
@@ -44,10 +49,15 @@ class CartWithoutRouter extends React.Component {
           </React.Fragment>
         ))}
         <Total big />
+        {isMobile && (
+          <CTA active stretch onClick={this.handleCheckoutButtonClick}>
+            Check Out
+          </CTA>
+        )}
       </Container>
     )
   }
 }
 
-const Cart = withRouter(CartWithoutRouter)
+const Cart = withRouter(withMediaQuery(BareCart))
 export default Cart

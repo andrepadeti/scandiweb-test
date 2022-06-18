@@ -31,6 +31,8 @@ const ScrollArea = styled.div`
   // to accomodate the scrollbar neatly
   margin-inline-end: -1rem;
   padding-inline-end: 1rem;
+  // plus this trick to keep layout consistent
+  scrollbar-gutter: stable;
 
   margin-block-end: 1rem;
   overflow: auto;
@@ -127,13 +129,14 @@ class MiniCartWithoutRouter extends React.Component {
       <Overlay>
         <OutsideClickHandler
           onOutsideClick={() =>
-            // had to setTimeout because this click event clashes with 
+            // had to setTimeout because this click event clashes with
             // click event in CartIcon component
             setTimeout(this.handleOutsideClick, 100)
           }
         >
           <Container>
             <ScrollArea>
+              {process.env.REACT_APP_DUMMY_CART && <h3>Dummy Cart</h3>}
               <Title>
                 My bag,{' '}
                 <NumberOfItems>

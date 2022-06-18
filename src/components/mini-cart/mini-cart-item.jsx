@@ -8,6 +8,7 @@ import currencySymbol from '../../utils/currencies'
 
 const Container = styled.div`
   display: flex;
+  gap: 0.5em;
   margin-block: 2rem;
 `
 
@@ -41,6 +42,7 @@ const PictureContainer = styled.div`
 `
 
 const Picture = styled.img`
+  /* padding-inline-start: 0.5em; */
   object-fit: contain;
 `
 

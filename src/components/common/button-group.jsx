@@ -32,16 +32,21 @@ const Button = styled.button`
   color: hsla(0, 0%, 16%, 1);
   border: 1px solid #a6a6a6;
 
-  &:hover {
-    outline: ${props => props.swatch && '2px solid #c4c1c1'};
-  }
+  ${props =>
+    props.theme !== 'mini-cart' &&
+    !props.active &&
+    css`
+      &:hover, &:focus {
+        outline: ${props => props.swatch && '2px solid #c4c1c1'};
+      }
+    `}
 
   ${props =>
     props.active &&
     css`
       background-color: ${!props.swatch && 'hsla(216, 8%, 12%, 1)'};
       color: white;
-      outline: ${props.swatch && '2px solid #a6a6a6'};
+      outline: ${props.swatch && '2px solid #5c5b5b'};
     `}
 `
 

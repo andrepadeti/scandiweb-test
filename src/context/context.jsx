@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { dummyCart } from '../utils/dummy-cart'
 
 const Context = React.createContext()
 
@@ -7,7 +8,7 @@ export class GlobalContext extends React.Component {
     currency: 'USD',
     categories: [],
     currentProduct: {},
-    cart: [],
+    cart: process.env.REACT_APP_DUMMY_CART ? dummyCart : [],
     showMiniCart: false,
     toasts: [],
   }

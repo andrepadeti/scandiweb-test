@@ -13,7 +13,9 @@ export const Button = styled.button`
   cursor: pointer;
   transition: 0.2s;
 
-  &:hover {
+  // hover for mouse devices and focus for tap devices
+  &:hover,
+  &:focus {
     background-color: var(--c-bg-light-hover);
   }
 `
@@ -25,6 +27,12 @@ export const CTA = styled(Button)`
   cursor: default;
 
   ${props =>
+    props.stretch &&
+    css`
+      width: 100%;
+    `}
+
+  ${props =>
     props.active &&
     css`
       background-color: var(--c-primary);
@@ -32,7 +40,7 @@ export const CTA = styled(Button)`
       color: var(--c-text-light);
       cursor: pointer;
 
-      &:hover {
+      &:hover, &:focus {
         background-color: var(--c-primary-hover);
       }
     `}
